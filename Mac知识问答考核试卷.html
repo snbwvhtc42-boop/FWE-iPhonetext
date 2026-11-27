@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mac 知识问答考核试卷</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #eef2f7 0%, #e4ebf5 100%);
+      color: #1d1d1f;
+      padding: 24px 14px 60px;
+      line-height: 1.6;
+    }
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-header {
+      background: linear-gradient(120deg, #1d1d1f 0%, #2c3e50 50%, #0071e3 100%);
+      color: #ffffff;
+      padding: 26px 24px;
+      border-radius: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 20px rgba(0, 113, 227, 0.18);
+    }
+    .hero-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .hero-title p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.88);
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .score-badge {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .action-pill {
+      background: #ffffff;
+      color: #0071e3;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+    .action-pill:hover {
+      transform: translateY(-1px);
+      background: #f0f7ff;
+    }
+    .action-pill.secondary {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: none;
+    }
+    .action-pill.secondary:hover {
+      background: rgba(255, 255, 255, 0.26);
+    }
+    .qr-panel {
+      display: none;
+      background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
+      border: 1.5px solid #cfe2ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .qr-panel.active {
+      display: flex;
+    }
+    .qr-info {
+      flex: 1;
+      min-width: 240px;
+    }
+    .qr-info h3 {
+      font-size: 17px;
+      color: #0071e3;
+      margin-bottom: 6px;
+    }
+    .qr-info p {
+      font-size: 13.5px;
+      color: #48484a;
+      margin-bottom: 10px;
+    }
+    .url-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .url-row input {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1d1d1f;
+      background: #ffffff;
+    }
+    .qr-code-box {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .qr-code-box img {
+      width: 148px;
+      height: 148px;
+      display: block;
+      margin: 0 auto;
+    }
+    .qr-caption {
+      font-size: 12px;
+      color: #6e6e73;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    .user-bar {
+      background: #f5f7fa;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .user-inputs {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 180px;
+    }
+    .input-group label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1d1d1f;
+      white-space: nowrap;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+      background: #ffffff;
+    }
+    .input-group input:focus {
+      border-color: #0071e3;
+    }
+    .input-group input:disabled {
+      background: #ebebf0;
+      color: #6e6e73;
+    }
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d1d1f;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .timer-val {
+      color: #0071e3;
+      font-variant-numeric: tabular-nums;
+      font-size: 16px;
+    }
+    .sync-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e8f8ee;
+      color: #1e7e34;
+      cursor: pointer;
+      user-select: none;
+    }
+    .sync-badge.syncing {
+      background: #eef6ff;
+      color: #0071e3;
+    }
+    .sync-badge.local {
+      background: #fff8e6;
+      color: #8a5a00;
+    }
+    .notice-bar {
+      background: #fff8e6;
+      color: #8a5a00;
+      border: 1px solid #ffe3a3;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .progress-text {
+      color: #0071e3;
+      font-weight: 700;
+    }
+    .question-card {
+      background: #fafafa;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+    .question-card.correct {
+      border-color: #34c759;
+      background: #f2fbf5;
+    }
+    .question-card.wrong {
+      border-color: #ff3b30;
+      background: #fff5f5;
+    }
+    .question-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #1d1d1f;
+    }
+    .tag {
+      display: inline-block;
+      background: #e8f2ff;
+      color: #0071e3;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .score-tag {
+      color: #6e6e73;
+      font-size: 13px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      border: 1.5px solid #d2d2d7;
+      border-radius: 10px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .option-label:hover:not(.locked) {
+      border-color: #0071e3;
+      background: #f5f9ff;
+    }
+    .option-label.selected:not(.locked) {
+      border-color: #0071e3;
+      background: #eef6ff;
+      font-weight: 600;
+    }
+    .option-label.correct-answer {
+      border-color: #34c759;
+      background: #e8f8ee;
+      color: #1e7e34;
+      font-weight: 600;
+    }
+    .option-label.wrong-answer {
+      border-color: #ff3b30;
+      background: #ffeceb;
+      color: #d70015;
+      font-weight: 600;
+    }
+    .option-label.locked {
+      cursor: not-allowed;
+    }
+    .option-label input {
+      width: 18px;
+      height: 18px;
+      accent-color: #0071e3;
+      cursor: inherit;
+      flex-shrink: 0;
+    }
+    .status-msg {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      display: none;
+    }
+    .question-card.correct .status-msg {
+      display: block;
+      color: #248a3d;
+    }
+    .question-card.wrong .status-msg {
+      display: block;
+      color: #d70015;
+    }
+    .explanation-box {
+      margin-top: 10px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.88);
+      border-left: 4px solid #0071e3;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #3a3a3c;
+      line-height: 1.65;
+      display: none;
+    }
+    .question-card.correct .explanation-box,
+    .question-card.wrong .explanation-box {
+      display: block;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .submit-btn {
+      flex: 2;
+      min-width: 200px;
+      padding: 16px;
+      background: #0071e3;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: #005bb5;
+    }
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+    .submit-btn:disabled {
+      background: #a1a1a6;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .reset-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 16px;
+      background: #1d1d1f;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+    }
+    .reset-btn:hover {
+      background: #3a3a3c;
+    }
+    .result-banner {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .result-banner.full-mark {
+      display: block;
+      background: linear-gradient(135deg, #e8f8ee 0%, #d1f4de 100%);
+      color: #156229;
+      border: 2px solid #34c759;
+      box-shadow: 0 8px 24px rgba(52, 199, 89, 0.2);
+    }
+    .result-banner.normal-mark {
+      display: block;
+      background: #f2f2f7;
+      color: #1d1d1f;
+      border: 1.5px solid #d2d2d7;
+    }
+    .leaderboard-section {
+      margin-top: 32px;
+      background: #fafafa;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 18px;
+      padding: 24px;
+    }
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .leaderboard-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #1d1d1f;
+      flex-wrap: wrap;
+    }
+    .leaderboard-sub {
+      font-size: 13px;
+      color: #6e6e73;
+      font-weight: 500;
+    }
+    .leaderboard-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .small-btn {
+      padding: 8px 14px;
+      background: #0071e3;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .small-btn:hover {
+      background: #005bb5;
+    }
+    .small-btn.gray {
+      background: #e5e5ea;
+      color: #1d1d1f;
+    }
+    .small-btn.gray:hover {
+      background: #d2d2d7;
+    }
+    .small-btn.danger {
+      background: #ffeceb;
+      color: #d70015;
+    }
+    .small-btn.danger:hover {
+      background: #ffd8d6;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #6e6e73;
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0071e3;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e5ea;
+    }
+    table.rank-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: left;
+    }
+    table.rank-table th {
+      background: #f5f7fa;
+      color: #6e6e73;
+      font-weight: 700;
+      padding: 12px 14px;
+      border-bottom: 1px solid #e5e5ea;
+      white-space: nowrap;
+    }
+    table.rank-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f0f5;
+      color: #1d1d1f;
+      white-space: nowrap;
+    }
+    table.rank-table tr:last-child td {
+      border-bottom: none;
+    }
+    table.rank-table tr.highlight-row {
+      background: #eef6ff;
+      font-weight: 600;
+    }
+    .rank-medal {
+      font-size: 16px;
+      font-weight: 700;
+      display: inline-block;
+      min-width: 28px;
+      text-align: center;
+    }
+    .score-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      background: #eef6ff;
+      color: #0071e3;
+    }
+    .score-pill.full {
+      background: #e8f8ee;
+      color: #1e7e34;
+    }
+    .empty-rank {
+      text-align: center;
+      padding: 28px;
+      color: #86868b;
+      font-size: 14px;
+    }
+    @media (max-width: 640px) {
+      .container {
+        padding: 18px 14px;
+      }
+      .hero-header {
+        padding: 20px 16px;
+      }
+      .hero-title h1 {
+        font-size: 20px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .qr-panel {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .qr-code-box {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="container">
+    <div class="hero-header">
+      <div class="hero-title">
+        <h1>Mac 知识问答考核试卷</h1>
+        <p>新同事培训考核试卷 · 共 21 题（单项选择） · 百分制（满分 100 分）</p>
+      </div>
+      <div class="hero-actions">
+        <button class="action-pill" onclick="toggleQRPanel()">📱 扫码多端答题</button>
+        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 实时排行榜</button>
+        <div class="score-badge" id="score-display">满分：100 分</div>
+      </div>
+    </div>
+
+    <div class="qr-panel" id="qr-panel">
+      <div class="qr-info">
+        <h3>📱 手机 / iPad 扫码多设备同步答题</h3>
+        <p>部署在 GitHub Pages 后，同事直接用手机或 iPad 扫描右侧二维码即可打开本试卷，交卷后成绩实时汇总至下方排行榜。</p>
+        <div class="url-row">
+          <input type="text" id="share-url-input" value="" placeholder="当前网页链接（自动获取或手动粘贴）" onchange="updateQRCode()" />
+          <button class="small-btn" onclick="updateQRCode()">生成二维码</button>
+          <button class="small-btn gray" onclick="copyShareUrl()">复制链接</button>
+        </div>
+      </div>
+      <div class="qr-code-box">
+        <div id="qr-container"></div>
+        <div class="qr-caption">相机扫码立即答题</div>
+      </div>
+    </div>
+
+    <div class="user-bar" id="user-bar">
+      <div class="user-inputs">
+        <div class="input-group">
+          <label for="user-name">考生姓名：</label>
+          <input type="text" id="user-name" placeholder="请输入姓名或昵称（必填）" maxlength="24" oninput="startTimerIfNeeded()" />
+        </div>
+        <div class="input-group">
+          <label for="user-dept">部门/门店：</label>
+          <input type="text" id="user-dept" placeholder="选填，如 Product Zone" maxlength="24" oninput="startTimerIfNeeded()" />
+        </div>
+      </div>
+      <div class="timer-box">
+        <span>⏱️ 用时：<span class="timer-val" id="timer-display">00:00</span></span>
+        <span class="sync-badge" id="sync-status" onclick="syncFromCloud(true)" title="点击立即同步多设备最新排行榜">🟢 多设备云同步就绪</span>
+      </div>
+    </div>
+
+    <div class="notice-bar">
+      <span>规则说明：百分制计分（共 21 题单项选择），交卷后锁定不可修改并实时同步至多设备排行榜</span>
+      <span class="progress-text" id="progress-display">已答：0 / 21 题</span>
+    </div>
+
+    <div id="quiz-list"></div>
+
+    <div class="btn-row">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">提交试卷并同步上榜</button>
+      <button class="reset-btn" id="reset-btn" onclick="resetQuizForNextUser()">🔄 下一位考生答题</button>
+    </div>
+
+    <div class="result-banner" id="result-banner"></div>
+
+    <div class="leaderboard-section" id="leaderboard-section">
+      <div class="leaderboard-header">
+        <div class="leaderboard-title">
+          <span>🏆 跨设备实时排行榜</span>
+          <span class="leaderboard-sub">（支持 GitHub Pages 与本地打开 · 不同设备提交自动同步至同一榜单）</span>
+        </div>
+        <div class="leaderboard-actions">
+          <button class="small-btn gray" onclick="syncFromCloud(true)">🔄 刷新榜单</button>
+          <button class="small-btn gray" onclick="exportLeaderboardCSV()">📥 导出成绩(CSV)</button>
+          <button class="small-btn danger" onclick="clearLeaderboard()">🗑️ 清空榜单</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">参考人数</div>
+          <div class="stat-value" id="stat-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">最高得分</div>
+          <div class="stat-value" id="stat-max">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">平均得分</div>
+          <div class="stat-value" id="stat-avg">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">满分人数</div>
+          <div class="stat-value" id="stat-full">0</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="rank-table">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>姓名</th>
+              <th>部门 / 门店</th>
+              <th>得分</th>
+              <th>答对题数</th>
+              <th>答题用时</th>
+              <th>设备端</th>
+              <th>提交时间</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="8" class="empty-rank">暂无考核记录，快来提交第一份满分答卷吧！</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CLOUD_TOPIC = "lynn_mac_quiz_lb_2026_v1";
+    const NTFY_BASE = "https://ntfy.sh/" + CLOUD_TOPIC;
+    const STORAGE_KEY = "apple_quiz_leaderboard_v1";
+    const CLEAR_TS_KEY = STORAGE_KEY + "_clear_ts";
+
+    const questions = [
+      {
+        q: "1. 搭载 M6 芯片的新款 14 英寸 MacBook Pro，其图形性能和 AI 性能相比 M1 机型分别提升最高达几倍？",
+        options: [
+          "A. 图形性能提升 9 倍，AI 性能提升 10 倍",
+          "B. 图形性能提升 11 倍，AI 性能提升 13 倍",
+          "C. 图形性能提升 10 倍，AI 性能提升 12 倍",
+          "D. 图形性能提升 7 倍，AI 性能提升 9.5 倍"
+        ],
+        answer: 1
+      },
+      {
+        q: "2. 搭载 M6 芯片的新款 24 英寸 iMac 运行设备端 AI（如 LM Studio）的性能，相比 M4 机型和 M1 机型分别提升最高可达几倍？",
+        options: [
+          "A. 相比 M4 提升 3 倍，相比 M1 提升 9 倍",
+          "B. 相比 M4 提升 5 倍，相比 M1 提升 12 倍",
+          "C. 相比 M4 提升 5.5 倍，相比 M1 提升 10 倍",
+          "D. 相比 M4 提升 4 倍，相比 M1 提升 15 倍"
+        ],
+        answer: 1
+      },
+      {
+        q: "3. MacBook Air 的电池续航最长可达多少小时，让学生去图书馆不用到处找插座？",
+        options: ["A. 12 小时", "B. 15 小时", "C. 18 小时", "D. 24 小时"],
+        answer: 2
+      },
+      {
+        q: "4. 为什么指南中特别向新闻专业的同学推荐 MacBook Air 作为“通勤神器”？",
+        options: [
+          "A. 因为它内置了免费的新闻排版软件",
+          "B. 因为它能随时随地回复邮件",
+          "C. 因为随时随地打开就能剪辑，在地铁上也能改稿子",
+          "D. 因为它可以免费连接校园网"
+        ],
+        answer: 2
+      },
+      {
+        q: "5. 对于生命分析化学和科研党来说，Mac 在 AI 方面的最大优势是什么？",
+        options: [
+          "A. 赠送无限容量的云端存储空间",
+          "B. 能直接把大模型（如 Qwen3）部署在本地，断网可用且数据绝对安全保密",
+          "C. 能够自动生成实验报告和论文",
+          "D. 拥有专属的化学分子式输入法"
+        ],
+        answer: 1
+      },
+      {
+        q: "6. 为了在 Mac 本地部署 AI 大模型（将内存当显存用），指南中推荐的内存配置至少是多少？",
+        options: ["A. 8GB", "B. 16GB", "C. 32GB", "D. 64GB"],
+        answer: 1
+      },
+      {
+        q: "7. 在“资料整理”场景中，指南建议配合哪款软件来做个人知识库？",
+        options: ["A. Notion", "B. Evernote (印象笔记)", "C. Obsidian", "D. GoodNotes"],
+        answer: 2
+      },
+      {
+        q: "8. “你在 Mac 上看到有用的资料，复制一下，直接就能在 iPad 的笔记里粘贴”，这得益于Apple生态的哪项功能？",
+        options: ["A. 隔空投送 (AirDrop)", "B. 随航 (Sidecar)", "C. 通用剪贴板", "D. iCloud 云盘"],
+        answer: 2
+      },
+      {
+        q: "9. 在宿舍写论文时，可以通过什么功能把 iPad 放在旁边当第二块屏幕（一边看文献一边敲字）？",
+        options: ["A. 随航（拓展屏）", "B. 屏幕镜像", "C. 台前调度", "D. 隔空播放"],
+        answer: 0
+      },
+      {
+        q: "10. 指南中提到 Mac 的屏幕色彩极准、暗部细节清晰。这块屏幕被称作哪些专业的“刚需”？",
+        options: [
+          "A. 金融学与会计学",
+          "B. 时尚设计与医学（放射影像学）",
+          "C. 汉语言文学与历史学",
+          "D. 软件工程与网络安全"
+        ],
+        answer: 1
+      },
+      {
+        q: "11. 为什么 MacBook Air 特别适合宿舍生活，熬夜赶作业也不会吵到室友？",
+        options: [
+          "A. 因为它的键盘带有静音薄膜",
+          "B. 因为它没有风扇，不管跑多大的软件都相对安静",
+          "C. 因为它可以一键关闭所有声音",
+          "D. 因为它自带降噪耳机"
+        ],
+        answer: 1
+      },
+      {
+        q: "12. 在协助顾客进行支付宝（Alipay）教育资格验证时，如果 EasyPay 上的验证结果显示为“处理中（in-progress）”，你应该怎么做以加快验证速度？",
+        options: [
+          "A. 让顾客回家等待 24 小时后再来。",
+          "B. 重新扫描二维码进行验证。",
+          "C. 直接呼叫经理进行 override 授权。",
+          "D. 向顾客出示 Alipay NFC 卡触发快速通道（Fast Track）服务，通常 5 到 15 分钟内可出结果。"
+        ],
+        answer: 3
+      },
+      {
+        q: "13. Mac 的极简界面、无右下角弹窗广告以及“专注模式”，被评价为对哪类人群特别友好？",
+        options: [
+          "A. 色弱/色盲人群",
+          "B. 听力障碍人群",
+          "C. ADHD（注意力缺陷多动障碍）容易分心的人群",
+          "D. 视力不佳的老年人群"
+        ],
+        answer: 2
+      },
+      {
+        q: "14. Apple Trade In 换购计划为购买者带来了什么好处？",
+        options: [
+          "A. 购买新机后可以免费换一次电池",
+          "B. 闲置设备抵扣，大幅降低购机门槛，环保又划算",
+          "C. 可以用旧的 Windows 电脑等价交换一台 Mac",
+          "D. 购买配件享受半价优惠"
+        ],
+        answer: 1
+      },
+      {
+        q: "15. 一位大学社团负责人来店里购买 iPad Air，他提到社团需要一个能让多人实时在线编辑、排版自由（万物皆 Block）、适合搭建团队知识库（Wiki）和做项目进度看板的云端工具。你会向他推荐以下哪款应用？",
+        options: ["A. RStudio", "B. Obsidian", "C. Notion", "D. 备忘录"],
+        answer: 2
+      },
+      {
+        q: "16. 搭载 M6 芯片的新款 14 英寸 MacBook Pro 在核心架构、内存带宽与外接显示器方面的规格是？",
+        options: [
+          "A. 10 核 CPU + 10 核 GPU，120GB/s 内存带宽，仅支持外接 1 台 6K 显示器",
+          "B. 12 核 CPU + 12 核 GPU + 双 16 核神经网络引擎，16GB 统一内存起步（170GB/s 带宽），支持 Wi-Fi 7 与外接至多 2 台高分辨率显示器",
+          "C. 14 核 CPU + 16 核 GPU，200GB/s 内存带宽，配备 3 个雷雳 5 端口并支持外接 3 台显示器",
+          "D. 8 核 CPU + 10 核 GPU，8GB 统一内存起步（100GB/s 带宽），支持外接 2 台显示器"
+        ],
+        answer: 1
+      },
+      {
+        q: "17. 一位社会科学专业的准大学生来到店里，表示大学期间需要处理大量的问卷调查数据，并使用编程语言进行统计分析和图表绘制。作为 Specialist 专家，你应该向他推荐哪款软件，以及哪款适合随身携带去图书馆与课堂的 Mac？",
+        options: [
+          "A. Notion + Mac mini",
+          "B. RStudio + MacBook Air",
+          "C. Obsidian + iMac",
+          "D. RStudio + MacBook Neo"
+        ],
+        answer: 1
+      },
+      {
+        q: "18. 顾客在门店同时对比两款 14 英寸 MacBook Pro（M6 款 vs PROLED XDR 款），以下哪项核心定位差异介绍是准确的？",
+        options: [
+          "A. M6 款同样配备双层串联 OLED 屏幕与灵动岛，仅取消了屏幕触控功能",
+          "B. M6 款（RMB 15,999 起）配备 Liquid 视网膜 XDR 屏（1600 尼特峰值，无触控）与雷雳 4，适合学生、商务与跨界创作者；PROLED XDR 款（RMB 22,999 起）搭载 M5 Pro/Max、双层串联 OLED 触控屏、灵动岛与雷雳 5，专为重度专业工作流打造",
+          "C. M6 款采用无风扇静音设计，而 PROLED XDR 款内置主动散热双风扇",
+          "D. 两款均采用 Mini-LED 显示屏且不支持触控，唯一区别是芯片型号与起步硬盘容量不同"
+        ],
+        answer: 1
+      },
+      {
+        q: "19. 一位文科研究生想要构建个人的“第二大脑”，她非常看重数据隐私，希望笔记能以 Markdown 格式保存在本地，并且能结合本地部署的 AI 大模型使用。你应该向她推荐哪款软件？",
+        options: ["A. Notion", "B. RStudio", "C. Obsidian", "D. GoodNotes"],
+        answer: 2
+      },
+      {
+        q: "20. 顾客在对比搭载 M6 芯片的新款 24 英寸 iMac 的 10 核版本（RMB 12,499）与 12 核版本（RMB 13,999），其中 12 核版本有哪些专属优势？",
+        options: [
+          "A. 屏幕尺寸从 24 英寸升级到 27 英寸 5K 视网膜屏，并支持 120Hz 自适应刷新率",
+          "B. 配备 4 个雷雳 4 端口、标配带有触控 ID 的同色系妙控键盘，并可选配纳米纹理玻璃显示屏与 2.5Gb 以太网",
+          "C. 10 核基础版包装内不附赠鼠标和键盘，只有 12 核版本才附赠同色系妙控配件",
+          "D. 内置大容量电池，拔掉电源线后可在会议室连续移动使用 12 小时"
+        ],
+        answer: 1
+      },
+      {
+        q: "21. 顾客拿着老款 Intel 或 M1 芯片电脑来店咨询升级搭载 M6 芯片的 14 英寸 MacBook Pro，关于续航、性能释放和快充表现，以下哪项介绍准确？",
+        options: [
+          "A. 续航最长可达 18 小时，拔掉电源使用电池供电时会自动降低处理器主频以省电",
+          "B. 续航最长可达 20 小时，仅支持通过 MagSafe 3 接口慢充，充至 50% 约需 60 分钟",
+          "C. 续航最长可达 22 小时，必须搭配 140W 电源适配器才能在 30 分钟内充至 50% 电量",
+          "D. 续航最长可达 24 小时（比 Intel 机型增加最长 14 小时，比 M1 机型增加最长 4 小时），插电与使用电池均能满血释放性能，搭配 96W 及以上适配器 30 分钟可充至最多 50% 电量"
+        ],
+        answer: 3
+      }
+    ];
+
+    const perScore = 100 / questions.length;
+    let answeredState = questions.map(() => new Set());
+    let submitted = false;
+    let audioCtx = null;
+    let timerInterval = null;
+    let startTimeMs = null;
+    let elapsedSeconds = 0;
+    let lastSubmittedId = null;
+    let leaderboardData = [];
+    let confettiAnimId = null;
+    let syncInProgress = false;
+
+    function detectDeviceLabel() {
+      const ua = navigator.userAgent || "";
+      if (/iPhone/i.test(ua)) return "iPhone";
+      if (/iPad/i.test(ua)) return "iPad";
+      if (/Android/i.test(ua)) return "Android";
+      if (/Macintosh/i.test(ua)) return "Mac";
+      return "电脑端";
+    }
+
+    function formatDuration(sec) {
+      const s = Math.max(0, Math.floor(sec));
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`;
+    }
+
+    function startTimerIfNeeded() {
+      if (submitted || timerInterval) return;
+      startTimeMs = Date.now() - elapsedSeconds * 1000;
+      timerInterval = setInterval(() => {
+        elapsedSeconds = Math.floor((Date.now() - startTimeMs) / 1000);
+        document.getElementById("timer-display").textContent = formatDuration(elapsedSeconds);
+      }, 500);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playClickSound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(660, ctx.currentTime);
+        gain.gain.setValueAtTime(0.06, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.06);
+      } catch (e) {}
+    }
+
+    function playSubmitSound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const notes = [
+          { f: 523.25, d: 0.12 },
+          { f: 659.25, d: 0.18 }
+        ];
+        let t = ctx.currentTime;
+        notes.forEach(n => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(n.f, t);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + n.d);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + n.d);
+          t += n.d;
+        });
+      } catch (e) {}
+    }
+
+    function playVictorySound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const melody = [
+          { f: 523.25, d: 0.14 },
+          { f: 659.25, d: 0.14 },
+          { f: 783.99, d: 0.14 },
+          { f: 1046.50, d: 0.28 },
+          { f: 783.99, d: 0.14 },
+          { f: 1046.50, d: 0.55 }
+        ];
+        let t = ctx.currentTime;
+        melody.forEach(note => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(note.f, t);
+          gain.gain.setValueAtTime(0.3, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + note.d);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + note.d);
+          t += note.d;
+        });
+      } catch (e) {}
+    }
+
+    function renderQuiz() {
+      const listEl = document.getElementById("quiz-list");
+      const scoreLabel = Number.isInteger(perScore) ? perScore : perScore.toFixed(1);
+      listEl.innerHTML = questions.map((item, qIdx) => {
+        const isMulti = Array.isArray(item.answer) && item.multi !== false;
+        const inputType = isMulti ? "checkbox" : "radio";
+        const tagHtml = item.tag ? `<span class="tag">${item.tag}</span>` : "";
+        const expHtml = item.explanation ? `<div class="explanation-box" id="exp-${qIdx}"><strong>解析：</strong>${item.explanation}</div>` : "";
+        return `
+          <div class="question-card" id="card-${qIdx}">
+            <div class="question-title">
+              ${tagHtml}${item.q}
+              <span class="score-tag">（${scoreLabel}分）</span>
+            </div>
+            <div class="options">
+              ${item.options.map((opt, oIdx) => `
+                <label class="option-label" id="label-${qIdx}-${oIdx}">
+                  <input type="${inputType}" name="q-${qIdx}" id="input-${qIdx}-${oIdx}" value="${oIdx}" onchange="handleOptionChange(${qIdx}, ${oIdx}, ${isMulti})" />
+                  <span>${opt}</span>
+                </label>
+              `).join("")}
+            </div>
+            <div class="status-msg" id="status-${qIdx}"></div>
+            ${expHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function handleOptionChange(qIdx, oIdx, isMulti) {
+      if (submitted) return;
+      startTimerIfNeeded();
+      playClickSound();
+
+      if (isMulti) {
+        const input = document.getElementById(`input-${qIdx}-${oIdx}`);
+        const label = document.getElementById(`label-${qIdx}-${oIdx}`);
+        if (input && input.checked) {
+          answeredState[qIdx].add(oIdx);
+          if (label) label.classList.add("selected");
+        } else {
+          answeredState[qIdx].delete(oIdx);
+          if (label) label.classList.remove("selected");
+        }
+      } else {
+        answeredState[qIdx].clear();
+        answeredState[qIdx].add(oIdx);
+        questions[qIdx].options.forEach((_, idx) => {
+          const l = document.getElementById(`label-${qIdx}-${idx}`);
+          if (l) l.classList.toggle("selected", idx === oIdx);
+        });
+      }
+
+      const answeredCount = answeredState.filter(s => s.size > 0).length;
+      document.getElementById("progress-display").textContent = `已答：${answeredCount} / ${questions.length} 题`;
+    }
+
+    function isSameSet(setA, arrB) {
+      if (setA.size !== arrB.length) return false;
+      return arrB.every(idx => setA.has(idx));
+    }
+
+    async function submitQuiz() {
+      if (submitted) return;
+
+      const nameInput = document.getElementById("user-name");
+      const deptInput = document.getElementById("user-dept");
+      const userName = nameInput.value.trim();
+      const userDept = deptInput.value.trim() || "-";
+
+      if (!userName) {
+        alert("请先在顶部输入您的姓名或昵称后再提交试卷");
+        nameInput.focus();
+        nameInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      const unansweredIdx = answeredState.findIndex(s => s.size === 0);
+      if (unansweredIdx !== -1) {
+        alert(`请先完成第 ${unansweredIdx + 1} 题后再提交试卷`);
+        document.getElementById(`card-${unansweredIdx}`).scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      submitted = true;
+      stopTimer();
+      elapsedSeconds = Math.max(1, elapsedSeconds);
+      document.getElementById("timer-display").textContent = formatDuration(elapsedSeconds);
+      nameInput.disabled = true;
+      deptInput.disabled = true;
+
+      let correctCount = 0;
+
+      questions.forEach((item, qIdx) => {
+        const userSet = answeredState[qIdx];
+        const rightArr = Array.isArray(item.answer) ? item.answer : [item.answer];
+        const rightSet = new Set(rightArr);
+        const card = document.getElementById(`card-${qIdx}`);
+        const statusEl = document.getElementById(`status-${qIdx}`);
+
+        item.options.forEach((_, oIdx) => {
+          const inp = document.getElementById(`input-${qIdx}-${oIdx}`);
+          const l = document.getElementById(`label-${qIdx}-${oIdx}`);
+          if (inp) inp.disabled = true;
+          if (l) {
+            l.classList.remove("selected");
+            l.classList.add("locked");
+            if (rightSet.has(oIdx)) {
+              l.classList.add("correct-answer");
+            } else if (userSet.has(oIdx)) {
+              l.classList.add("wrong-answer");
+            }
+          }
+        });
+
+        const correct = isSameSet(userSet, rightArr);
+        const userText = Array.from(userSet).sort((a, b) => a - b).map(i => ["A", "B", "C", "D"][i]).join("、");
+        const rightText = item.answerText || rightArr.map(i => ["A", "B", "C", "D"][i]).join("、");
+        const scoreLabel = Number.isInteger(perScore) ? perScore : perScore.toFixed(1);
+
+        if (correct) {
+          correctCount += 1;
+          card.classList.add("correct");
+          statusEl.textContent = `✓ 回答正确（+${scoreLabel}分） 正确答案：${rightText}`;
+        } else {
+          card.classList.add("wrong");
+          statusEl.textContent = `✗ 回答错误（0分） 你的选择：${userText} ｜ 正确答案：${rightText}`;
+        }
+      });
+
+      const finalScore = Math.round((correctCount / questions.length) * 100);
+      document.getElementById("score-display").textContent = `最终得分：${finalScore} / 100`;
+
+      const btn = document.getElementById("submit-btn");
+      btn.disabled = true;
+      btn.textContent = "试卷已提交并锁定（已同步至多设备排行榜）";
+      document.getElementById("reset-btn").style.display = "inline-block";
+
+      const now = new Date();
+      const timeStr = `${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
+
+      const record = {
+        id: "rec_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+        name: userName,
+        dept: userDept,
+        score: finalScore,
+        correct: correctCount,
+        total: questions.length,
+        duration: elapsedSeconds,
+        device: detectDeviceLabel(),
+        time: timeStr,
+        ts: Date.now()
+      };
+      lastSubmittedId = record.id;
+
+      const banner = document.getElementById("result-banner");
+      if (finalScore === 100) {
+        banner.className = "result-banner full-mark";
+        banner.textContent = `🎉 恭喜 ${userName} 满分通过考核！得分：100 分（答对 ${correctCount}/${questions.length} 题，用时 ${formatDuration(record.duration)}）`;
+        playVictorySound();
+        startConfetti();
+      } else {
+        banner.className = "result-banner normal-mark";
+        banner.textContent = `${userName} 本次考核得分：${finalScore} 分（答对 ${correctCount}/${questions.length} 题，用时 ${formatDuration(record.duration)}），已同步至排行榜`;
+        playSubmitSound();
+      }
+
+      await publishScoreToCloud(record);
+      document.getElementById("leaderboard-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetQuizForNextUser() {
+      submitted = false;
+      stopTimer();
+      stopConfetti();
+      elapsedSeconds = 0;
+      startTimeMs = null;
+      answeredState = questions.map(() => new Set());
+
+      document.getElementById("timer-display").textContent = "00:00";
+      document.getElementById("score-display").textContent = "满分：100 分";
+      document.getElementById("progress-display").textContent = `已答：0 / ${questions.length} 题`;
+
+      const nameInput = document.getElementById("user-name");
+      const deptInput = document.getElementById("user-dept");
+      nameInput.disabled = false;
+      deptInput.disabled = false;
+      nameInput.value = "";
+
+      const btn = document.getElementById("submit-btn");
+      btn.disabled = false;
+      btn.textContent = "提交试卷并同步上榜";
+      document.getElementById("reset-btn").style.display = "none";
+
+      const banner = document.getElementById("result-banner");
+      banner.className = "result-banner";
+
+      renderQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => nameInput.focus(), 300);
+    }
+
+    function toggleQRPanel() {
+      const panel = document.getElementById("qr-panel");
+      panel.classList.toggle("active");
+      if (panel.classList.contains("active")) {
+        const input = document.getElementById("share-url-input");
+        if (!input.value.trim() && window.location.protocol.startsWith("http")) {
+          input.value = window.location.href;
+        }
+        updateQRCode();
+      }
+    }
+
+    function updateQRCode() {
+      const input = document.getElementById("share-url-input");
+      const url = input.value.trim() || window.location.href;
+      const qrBox = document.getElementById("qr-container");
+      qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(url)}" alt="扫码答题二维码" />`;
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById("share-url-input");
+      const url = input.value.trim() || window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        alert("答题链接已复制，可直接发送给同事打开！");
+      }).catch(() => {
+        input.select();
+        document.execCommand("copy");
+        alert("答题链接已复制！");
+      });
+    }
+
+    function sortLeaderboard(list) {
+      return [...list].sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (a.duration || 9999) - (b.duration || 9999);
+      });
+    }
+
+    function getLocalLeaderboard() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function setLocalLeaderboard(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function getLocalClearTs() {
+      try {
+        return Number(localStorage.getItem(CLEAR_TS_KEY) || "0");
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function setLocalClearTs(ts) {
+      try {
+        localStorage.setItem(CLEAR_TS_KEY, String(ts));
+      } catch (e) {}
+    }
+
+    function setSyncBadge(stateType, text) {
+      const el = document.getElementById("sync-status");
+      if (!el) return;
+      el.textContent = text;
+      if (stateType === "syncing") el.className = "sync-badge syncing";
+      else if (stateType === "local") el.className = "sync-badge local";
+      else el.className = "sync-badge";
+    }
+
+    async function syncFromCloud(manual = false) {
+      if (syncInProgress) return leaderboardData;
+      syncInProgress = true;
+      if (manual) setSyncBadge("syncing", "🔄 正在同步多端榜单...");
+
+      try {
+        const res = await fetch(`${NTFY_BASE}/json?poll=1&since=all&t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const text = await res.text();
+          const lines = text.trim() ? text.trim().split("\n") : [];
+          let lastClearTs = getLocalClearTs();
+          const parsedEvents = [];
+
+          for (const line of lines) {
+            try {
+              const outer = JSON.parse(line);
+              if (outer.event === "message" && outer.message) {
+                const payload = JSON.parse(outer.message);
+                const msgTs = payload.ts || (outer.time ? outer.time * 1000 : 0);
+                if (payload.type === "clear") {
+                  if (msgTs > lastClearTs) lastClearTs = msgTs;
+                } else if (payload.type === "sync" || payload.type === "score") {
+                  parsedEvents.push({ payload, msgTs });
+                }
+              }
+            } catch (e) {}
+          }
+
+          if (lastClearTs > getLocalClearTs()) {
+            setLocalClearTs(lastClearTs);
+          }
+
+          const recordMap = new Map();
+          for (const item of getLocalLeaderboard()) {
+            if (item && item.id && (item.ts || 0) > lastClearTs) {
+              recordMap.set(item.id, item);
+            }
+          }
+
+          for (const { payload, msgTs } of parsedEvents) {
+            if (msgTs <= lastClearTs) continue;
+            if (Array.isArray(payload.snapshot)) {
+              for (const rec of payload.snapshot) {
+                if (rec && rec.id && (rec.ts || msgTs) > lastClearTs) {
+                  recordMap.set(rec.id, rec);
+                }
+              }
+            }
+            const single = payload.record || (payload.id ? payload : null);
+            if (single && single.id && (single.ts || msgTs) > lastClearTs) {
+              recordMap.set(single.id, single);
+            }
+          }
+
+          leaderboardData = sortLeaderboard(Array.from(recordMap.values()));
+          setLocalLeaderboard(leaderboardData);
+          renderLeaderboard();
+          setSyncBadge("ok", `🟢 多端实时同步 (${leaderboardData.length}人)`);
+          syncInProgress = false;
+          return leaderboardData;
+        }
+      } catch (e) {}
+
+      leaderboardData = sortLeaderboard(getLocalLeaderboard());
+      renderLeaderboard();
+      setSyncBadge("local", "🟡 离线本机模式");
+      syncInProgress = false;
+      return leaderboardData;
+    }
+
+    async function publishScoreToCloud(record) {
+      const localList = getLocalLeaderboard();
+      localList.push(record);
+      leaderboardData = sortLeaderboard(localList);
+      setLocalLeaderboard(leaderboardData);
+      renderLeaderboard();
+
+      await syncFromCloud(false);
+
+      const map = new Map();
+      for (const r of leaderboardData) {
+        if (r && r.id) map.set(r.id, r);
+      }
+      map.set(record.id, record);
+      leaderboardData = sortLeaderboard(Array.from(map.values()));
+      setLocalLeaderboard(leaderboardData);
+      renderLeaderboard();
+
+      try {
+        const payload = {
+          type: "sync",
+          record: record,
+          snapshot: leaderboardData.slice(0, 10),
+          ts: Date.now()
+        };
+        await fetch(NTFY_BASE, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        setSyncBadge("ok", `🟢 多端实时同步 (${leaderboardData.length}人)`);
+      } catch (e) {
+        setSyncBadge("local", "🟡 已存本机（联网后自动同步）");
+      }
+    }
+
+    async function clearLeaderboard() {
+      if (!confirm("确定要清空所有设备上的排行榜记录吗？")) return;
+      const clearTs = Date.now();
+      setLocalClearTs(clearTs);
+      setLocalLeaderboard([]);
+      leaderboardData = [];
+      lastSubmittedId = null;
+      renderLeaderboard();
+      try {
+        await fetch(NTFY_BASE, {
+          method: "POST",
+          body: JSON.stringify({ type: "clear", ts: clearTs })
+        });
+      } catch (e) {}
+    }
+
+    function initRealtimeSubscription() {
+      if (window.location.protocol.startsWith("http")) {
+        const input = document.getElementById("share-url-input");
+        if (input) input.value = window.location.href;
+      }
+      syncFromCloud(false);
+      try {
+        const es = new EventSource(`${NTFY_BASE}/sse`);
+        es.onmessage = (ev) => {
+          try {
+            const outer = JSON.parse(ev.data);
+            if (outer.event === "message" && outer.message) {
+              const payload = JSON.parse(outer.message);
+              const msgTs = payload.ts || (outer.time ? outer.time * 1000 : Date.now());
+              if (payload.type === "clear") {
+                setLocalClearTs(msgTs);
+                setLocalLeaderboard([]);
+                leaderboardData = [];
+                renderLeaderboard();
+                setSyncBadge("ok", "🟢 多端实时同步 (0人)");
+                return;
+              }
+              const lastClearTs = getLocalClearTs();
+              if (msgTs <= lastClearTs) return;
+              const recordMap = new Map();
+              for (const item of getLocalLeaderboard()) {
+                if (item && item.id && (item.ts || 0) > lastClearTs) recordMap.set(item.id, item);
+              }
+              if (Array.isArray(payload.snapshot)) {
+                for (const rec of payload.snapshot) {
+                  if (rec && rec.id && (rec.ts || msgTs) > lastClearTs) recordMap.set(rec.id, rec);
+                }
+              }
+              const single = payload.record || (payload.id ? payload : null);
+              if (single && single.id && (single.ts || msgTs) > lastClearTs) {
+                recordMap.set(single.id, single);
+              }
+              leaderboardData = sortLeaderboard(Array.from(recordMap.values()));
+              setLocalLeaderboard(leaderboardData);
+              renderLeaderboard();
+              setSyncBadge("ok", `🟢 多端实时同步 (${leaderboardData.length}人)`);
+            }
+          } catch (e) {
+            syncFromCloud(false);
+          }
+        };
+      } catch (e) {}
+      setInterval(() => {
+        syncFromCloud(false);
+      }, 25000);
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById("leaderboard-body");
+      const count = leaderboardData.length;
+      document.getElementById("stat-count").textContent = count;
+
+      if (count === 0) {
+        document.getElementById("stat-max").textContent = "-";
+        document.getElementById("stat-avg").textContent = "-";
+        document.getElementById("stat-full").textContent = "0";
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-rank">暂无考核记录，快来提交第一份满分答卷吧！</td></tr>`;
+        return;
+      }
+
+      const maxScore = Math.max(...leaderboardData.map(r => r.score));
+      const avgScore = Math.round(leaderboardData.reduce((s, r) => s + r.score, 0) / count);
+      const fullCount = leaderboardData.filter(r => r.score === 100).length;
+
+      document.getElementById("stat-max").textContent = `${maxScore}分`;
+      document.getElementById("stat-avg").textContent = `${avgScore}分`;
+      document.getElementById("stat-full").textContent = `${fullCount}人`;
+
+      tbody.innerHTML = leaderboardData.map((r, idx) => {
+        let rankDisplay = idx + 1;
+        if (idx === 0) rankDisplay = "🥇 1";
+        else if (idx === 1) rankDisplay = "🥈 2";
+        else if (idx === 2) rankDisplay = "🥉 3";
+
+        const isMe = r.id === lastSubmittedId;
+        const scoreClass = r.score === 100 ? "score-pill full" : "score-pill";
+        const correctStr = (r.correct !== undefined && r.total !== undefined) ? `${r.correct} / ${r.total}` : "-";
+
+        return `
+          <tr class="${isMe ? "highlight-row" : ""}">
+            <td><span class="rank-medal">${rankDisplay}</span></td>
+            <td>${escapeHtml(r.name)} ${isMe ? "👈" : ""}</td>
+            <td>${escapeHtml(r.dept || "-")}</td>
+            <td><span class="${scoreClass}">${r.score} 分</span></td>
+            <td>${correctStr}</td>
+            <td>${formatDuration(r.duration || 0)}</td>
+            <td>${escapeHtml(r.device || "电脑端")}</td>
+            <td>${escapeHtml(r.time || "-")}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function exportLeaderboardCSV() {
+      if (!leaderboardData.length) {
+        alert("当前排行榜暂无数据可导出");
+        return;
+      }
+      const headers = ["排名", "姓名", "部门/门店", "得分", "答对题数", "用时(秒)", "设备端", "提交时间"];
+      const rows = leaderboardData.map((r, i) => [
+        i + 1,
+        `"${(r.name || "").replace(/"/g, '""')}"`,
+        `"${(r.dept || "-").replace(/"/g, '""')}"`,
+        r.score,
+        r.correct !== undefined ? `${r.correct}/${r.total}` : "-",
+        r.duration || 0,
+        r.device || "电脑端",
+        r.time || "-"
+      ]);
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Mac 知识问答考核试卷_排行榜_${new Date().toLocaleDateString("zh-CN")}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[s]));
+    }
+
+    function scrollToLeaderboard() {
+      document.getElementById("leaderboard-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function stopConfetti() {
+      if (confettiAnimId) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+      const canvas = document.getElementById("confetti-canvas");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function startConfetti() {
+      stopConfetti();
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ["#ff3b30", "#ff9500", "#ffcc00", "#34c759", "#007aff", "#5856d6", "#af52de", "#ff2d55"];
+      const pieces = Array.from({ length: 260 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 12 + 6,
+        h: Math.random() * 7 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vy: Math.random() * 4.5 + 2.5,
+        vx: (Math.random() - 0.5) * 3.5,
+        angle: Math.random() * 360,
+        spin: (Math.random() - 0.5) * 9
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          p.angle += p.spin;
+          if (p.y > canvas.height + 20) {
+            p.y = -20;
+            p.x = Math.random() * canvas.width;
+          }
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.angle * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        confettiAnimId = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    window.addEventListener("resize", () => {
+      const canvas = document.getElementById("confetti-canvas");
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    });
+
+    renderQuiz();
+    initRealtimeSubscription();
+  </script>
+</body>
+</html>
