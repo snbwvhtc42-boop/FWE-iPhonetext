@@ -632,8 +632,9 @@
         <p>门店取货与店内库存预约考核 · 共 10 题（不定项选择） · 百分制（满分 100 分）</p>
       </div>
       <div class="hero-actions">
+        <a class="action-pill secondary" href="./index.html" style="text-decoration: none;">⬅️ 返回选择试卷</a>
         <button class="action-pill" onclick="toggleQRPanel()">📱 扫码多端答题</button>
-        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 实时排行榜</button>
+        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 排行榜</button>
         <div class="score-badge" id="score-display">满分：100 分</div>
       </div>
     </div>
@@ -681,6 +682,7 @@
     <div class="btn-row">
       <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">提交试卷并同步上榜</button>
       <button class="reset-btn" id="reset-btn" onclick="resetQuizForNextUser()">🔄 下一位考生答题</button>
+      <a href="./index.html" style="flex: 1; min-width: 140px; padding: 16px; background: #f2f2f7; color: #1d1d1f; border: 1.5px solid #d2d2d7; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">⬅️ 返回选择试卷</a>
     </div>
 
     <div class="result-banner" id="result-banner"></div>
@@ -688,8 +690,7 @@
     <div class="leaderboard-section" id="leaderboard-section">
       <div class="leaderboard-header">
         <div class="leaderboard-title">
-          <span>🏆 跨设备实时排行榜</span>
-          <span class="leaderboard-sub">（支持 GitHub Pages 与本地打开 · 不同设备提交自动同步至同一榜单）</span>
+          <span>🏆 排行榜</span>
         </div>
         <div class="leaderboard-actions">
           <button class="small-btn gray" onclick="syncFromCloud(true)">🔄 刷新榜单</button>
@@ -880,6 +881,40 @@
             ],
             "answerText": "B",
             "explanation": "当顾客有多笔 APU 订单时，通过 C&P 关联或在预约/订单列表中即可一次性查看顾客名下的多笔待取订单，统一提交 Runner 请求并合并处理，无需重复扫描 C&P。"
+      },
+      {
+            "tag": "ISR 与 APU 核心区别",
+            "q": "9. 对比 ISR（店内库存预约）与 APU（门店取货）两种业务模式，以下哪些说法是正确的？",
+            "options": [
+                  "A. APU 订单是顾客在线上已全额完成付款，到店核验身份后直接提取商品",
+                  "B. ISR 是顾客在线预约了门店的现货库存与到店时间段，但尚未付款，需在预约时间段到店通过 EasyPay 完成结账付款",
+                  "C. 由于 ISR 订单尚未完成在线支付，在店内结账时可以直接在同一笔交易中搭配 Apple Trade In 折抵换购、分期付款以及加购 AppleCare+ 与配件",
+                  "D. ISR 预约与 APU 一样，会为顾客在店内保留 7 天库存"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "APU 为线上已付款、到店提货（保留 7 天）；ISR（店内库存预约）为线上预约店内库存名额与到店时段、到店现场付款购买，因此可直接在 EasyPay 交易中无缝办理店内 Trade In 折抵、分期付款及加购 AppleCare+ 与配件；ISR 仅在顾客预约的当日指定时段内有效，逾期未到店系统将自动释放库存，不会保留 7 天（D 错误）。"
+      },
+      {
+            "tag": "ISR 接待与结账流程",
+            "q": "10. 在接待到店办理 ISR（店内库存预约）的顾客时，以下哪些操作符合标准流程与体验规范？",
+            "options": [
+                  "A. 优先通过 C&P 扫描或预约二维码定位顾客的 ISR 预约记录，并核验顾客本人有效身份证件原件（或当面打开政府官方 App 核验电子证件）",
+                  "B. 确认预约信息无误后及早发起 Runner 请求，利用等待产品从 Backstage 送达的时间探寻顾客需求，演示新功能并推荐保护壳、电源适配器及 AppleCare+",
+                  "C. 若顾客名下同时预约了多台 ISR 设备，可在预约列表中一并勾选合并处理，避免重复扫描",
+                  "D. 顾客如果超过预约当天仍未到店，次日来到门店时原 ISR 预约依然有效，可直接在系统中强制调出原预约发货"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "接待 ISR 顾客时，应通过 C&P 或预约码快速定位预约并严格核验人证一致，及早提 Runner 请求并利用等待间隙遵循 APPLE 服务步骤推荐完整解决方案（配件与 AppleCare+）；同一顾客名下多笔预约支持合并处理；ISR 预约仅限预约当日有效，隔日逾期自动失效并释放库存（D 错误）。"
       }
 ];
 

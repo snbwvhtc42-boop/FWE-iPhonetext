@@ -632,8 +632,9 @@
         <p>新同事培训考核试卷 · 共 21 题（单项选择） · 百分制（满分 100 分）</p>
       </div>
       <div class="hero-actions">
+        <a class="action-pill secondary" href="./index.html" style="text-decoration: none;">⬅️ 返回选择试卷</a>
         <button class="action-pill" onclick="toggleQRPanel()">📱 扫码多端答题</button>
-        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 实时排行榜</button>
+        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 排行榜</button>
         <div class="score-badge" id="score-display">满分：100 分</div>
       </div>
     </div>
@@ -681,6 +682,7 @@
     <div class="btn-row">
       <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">提交试卷并同步上榜</button>
       <button class="reset-btn" id="reset-btn" onclick="resetQuizForNextUser()">🔄 下一位考生答题</button>
+      <a href="./index.html" style="flex: 1; min-width: 140px; padding: 16px; background: #f2f2f7; color: #1d1d1f; border: 1.5px solid #d2d2d7; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">⬅️ 返回选择试卷</a>
     </div>
 
     <div class="result-banner" id="result-banner"></div>
@@ -688,8 +690,7 @@
     <div class="leaderboard-section" id="leaderboard-section">
       <div class="leaderboard-header">
         <div class="leaderboard-title">
-          <span>🏆 跨设备实时排行榜</span>
-          <span class="leaderboard-sub">（支持 GitHub Pages 与本地打开 · 不同设备提交自动同步至同一榜单）</span>
+          <span>🏆 排行榜</span>
         </div>
         <div class="leaderboard-actions">
           <button class="small-btn gray" onclick="syncFromCloud(true)">🔄 刷新榜单</button>
@@ -756,7 +757,8 @@
           "C. 图形性能提升 10 倍，AI 性能提升 12 倍",
           "D. 图形性能提升 7 倍，AI 性能提升 9.5 倍"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "搭载 M6 芯片的新款 14 英寸 MacBook Pro 相比 M1 机型图形性能提升最高达 11 倍，AI 性能提升最高达 13 倍。"
       },
       {
         q: "2. 搭载 M6 芯片的新款 24 英寸 iMac 运行设备端 AI（如 LM Studio）的性能，相比 M4 机型和 M1 机型分别提升最高可达几倍？",
@@ -766,12 +768,14 @@
           "C. 相比 M4 提升 5.5 倍，相比 M1 提升 10 倍",
           "D. 相比 M4 提升 4 倍，相比 M1 提升 15 倍"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "搭载 M6 芯片的新款 24 英寸 iMac 运行设备端 AI 性能相比 M4 机型提升最高达 5 倍，相比 M1 机型提升最高达 12 倍。"
       },
       {
         q: "3. MacBook Air 的电池续航最长可达多少小时，让学生去图书馆不用到处找插座？",
         options: ["A. 12 小时", "B. 15 小时", "C. 18 小时", "D. 24 小时"],
-        answer: 2
+        answer: 2,
+        explanation: "MacBook Air 电池续航最长可达 18 小时，满足全天候外出学习与办公需求。"
       },
       {
         q: "4. 为什么指南中特别向新闻专业的同学推荐 MacBook Air 作为“通勤神器”？",
@@ -781,7 +785,8 @@
           "C. 因为随时随地打开就能剪辑，在地铁上也能改稿子",
           "D. 因为它可以免费连接校园网"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "MacBook Air 轻薄便携、开盖即用且性能强劲，随时随地打开即可剪辑视频或修改文稿，非常适合新闻传媒专业通勤使用。"
       },
       {
         q: "5. 对于生命分析化学和科研党来说，Mac 在 AI 方面的最大优势是什么？",
@@ -791,27 +796,32 @@
           "C. 能够自动生成实验报告和论文",
           "D. 拥有专属的化学分子式输入法"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "Mac 采用统一内存架构，支持将大模型（如 Qwen3）直接部署在本地运行，断网可用且科研实验数据绝对安全保密。"
       },
       {
         q: "6. 为了在 Mac 本地部署 AI 大模型（将内存当显存用），指南中推荐的内存配置至少是多少？",
         options: ["A. 8GB", "B. 16GB", "C. 32GB", "D. 64GB"],
-        answer: 1
+        answer: 1,
+        explanation: "本地部署 AI 大模型需要将统一内存作为显存使用，指南推荐至少选择 16GB 及以上统一内存配置。"
       },
       {
         q: "7. 在“资料整理”场景中，指南建议配合哪款软件来做个人知识库？",
         options: ["A. Notion", "B. Evernote (印象笔记)", "C. Obsidian", "D. GoodNotes"],
-        answer: 2
+        answer: 2,
+        explanation: "Obsidian 支持本地 Markdown 存储与双向链接图谱，是构建个人知识库（第二大脑）的理想工具。"
       },
       {
         q: "8. “你在 Mac 上看到有用的资料，复制一下，直接就能在 iPad 的笔记里粘贴”，这得益于Apple生态的哪项功能？",
         options: ["A. 隔空投送 (AirDrop)", "B. 随航 (Sidecar)", "C. 通用剪贴板", "D. iCloud 云盘"],
-        answer: 2
+        answer: 2,
+        explanation: "Apple 生态的“通用剪贴板”功能支持在登录同一 Apple 账户的 Mac、iPad 和 iPhone 之间直接跨设备复制粘贴文本与图片。"
       },
       {
         q: "9. 在宿舍写论文时，可以通过什么功能把 iPad 放在旁边当第二块屏幕（一边看文献一边敲字）？",
         options: ["A. 随航（拓展屏）", "B. 屏幕镜像", "C. 台前调度", "D. 隔空播放"],
-        answer: 0
+        answer: 0,
+        explanation: "“随航（Sidecar）”功能可将 iPad 无线或有线变为 Mac 的第二块拓展显示屏，方便一边看文献一边写论文。"
       },
       {
         q: "10. 指南中提到 Mac 的屏幕色彩极准、暗部细节清晰。这块屏幕被称作哪些专业的“刚需”？",
@@ -821,7 +831,8 @@
           "C. 汉语言文学与历史学",
           "D. 软件工程与网络安全"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "Mac 视网膜显示屏色彩极准、灰阶与暗部细节清晰，是时尚设计（色彩校对）与医学放射影像学（阅片细节）的刚需配置。"
       },
       {
         q: "11. 为什么 MacBook Air 特别适合宿舍生活，熬夜赶作业也不会吵到室友？",
@@ -831,7 +842,8 @@
           "C. 因为它可以一键关闭所有声音",
           "D. 因为它自带降噪耳机"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "MacBook Air 采用无风扇静音设计，即使高负载运行软件也不会产生风扇噪音，非常适合宿舍和图书馆环境。"
       },
       {
         q: "12. 在协助顾客进行支付宝（Alipay）教育资格验证时，如果 EasyPay 上的验证结果显示为“处理中（in-progress）”，你应该怎么做以加快验证速度？",
@@ -841,7 +853,8 @@
           "C. 直接呼叫经理进行 override 授权。",
           "D. 向顾客出示 Alipay NFC 卡触发快速通道（Fast Track）服务，通常 5 到 15 分钟内可出结果。"
         ],
-        answer: 3
+        answer: 3,
+        explanation: "当支付宝教育优惠验证显示“处理中（in-progress）”时，可向顾客出示 Alipay NFC 卡触发快速通道（Fast Track），通常 5 至 15 分钟内即可出结果。"
       },
       {
         q: "13. Mac 的极简界面、无右下角弹窗广告以及“专注模式”，被评价为对哪类人群特别友好？",
@@ -851,7 +864,8 @@
           "C. ADHD（注意力缺陷多动障碍）容易分心的人群",
           "D. 视力不佳的老年人群"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "macOS 界面极简纯净、无弹窗广告干扰，配合“专注模式”可大幅减少分心，对 ADHD（注意力缺陷多动障碍）人群尤为友好。"
       },
       {
         q: "14. Apple Trade In 换购计划为购买者带来了什么好处？",
@@ -861,12 +875,14 @@
           "C. 可以用旧的 Windows 电脑等价交换一台 Mac",
           "D. 购买配件享受半价优惠"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "Apple Trade In 换购计划支持用符合条件的闲置旧设备折抵购机款项，既降低购机门槛又践行环保。"
       },
       {
         q: "15. 一位大学社团负责人来店里购买 iPad Air，他提到社团需要一个能让多人实时在线编辑、排版自由（万物皆 Block）、适合搭建团队知识库（Wiki）和做项目进度看板的云端工具。你会向他推荐以下哪款应用？",
         options: ["A. RStudio", "B. Obsidian", "C. Notion", "D. 备忘录"],
-        answer: 2
+        answer: 2,
+        explanation: "Notion 支持多人实时在线协作、模块化（Block）自由排版、搭建团队 Wiki 与项目看板，非常适合社团与团队协作。"
       },
       {
         q: "16. 搭载 M6 芯片的新款 14 英寸 MacBook Pro 在核心架构、内存带宽与外接显示器方面的规格是？",
@@ -876,7 +892,8 @@
           "C. 14 核 CPU + 16 核 GPU，200GB/s 内存带宽，配备 3 个雷雳 5 端口并支持外接 3 台显示器",
           "D. 8 核 CPU + 10 核 GPU，8GB 统一内存起步（100GB/s 带宽），支持外接 2 台显示器"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "搭载 M6 芯片的 14 英寸 MacBook Pro 配备 12 核 CPU + 12 核 GPU + 双 16 核神经网络引擎，16GB 统一内存起步（170GB/s 带宽），支持 Wi-Fi 7 与外接至多 2 台高分辨率显示器。"
       },
       {
         q: "17. 一位社会科学专业的准大学生来到店里，表示大学期间需要处理大量的问卷调查数据，并使用编程语言进行统计分析和图表绘制。作为 Specialist 专家，你应该向他推荐哪款软件，以及哪款适合随身携带去图书馆与课堂的 Mac？",
@@ -886,7 +903,8 @@
           "C. Obsidian + iMac",
           "D. RStudio + MacBook Neo"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "社会科学专业处理问卷统计分析与绘图最常用 R 语言（RStudio），搭配轻薄长续航的 MacBook Air 最适合去图书馆与课堂。"
       },
       {
         q: "18. 顾客在门店同时对比两款 14 英寸 MacBook Pro（M6 款 vs PROLED XDR 款），以下哪项核心定位差异介绍是准确的？",
@@ -896,12 +914,14 @@
           "C. M6 款采用无风扇静音设计，而 PROLED XDR 款内置主动散热双风扇",
           "D. 两款均采用 Mini-LED 显示屏且不支持触控，唯一区别是芯片型号与起步硬盘容量不同"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "14 英寸 MacBook Pro M6 款（RMB 15,999 起）配备 Liquid 视网膜 XDR 屏与雷雳 4；PROLED XDR 款（RMB 22,999 起）搭载 M5 Pro/Max、双层串联 OLED 触控屏、灵动岛与雷雳 5。"
       },
       {
         q: "19. 一位文科研究生想要构建个人的“第二大脑”，她非常看重数据隐私，希望笔记能以 Markdown 格式保存在本地，并且能结合本地部署的 AI 大模型使用。你应该向她推荐哪款软件？",
         options: ["A. Notion", "B. RStudio", "C. Obsidian", "D. GoodNotes"],
-        answer: 2
+        answer: 2,
+        explanation: "Obsidian 以本地 Markdown 文件保存笔记，数据完全掌控在自己手中，隐私性强且可结合本地 AI 模型构建“第二大脑”。"
       },
       {
         q: "20. 顾客在对比搭载 M6 芯片的新款 24 英寸 iMac 的 10 核版本（RMB 12,499）与 12 核版本（RMB 13,999），其中 12 核版本有哪些专属优势？",
@@ -911,7 +931,8 @@
           "C. 10 核基础版包装内不附赠鼠标和键盘，只有 12 核版本才附赠同色系妙控配件",
           "D. 内置大容量电池，拔掉电源线后可在会议室连续移动使用 12 小时"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "搭载 M6 芯片的 24 英寸 iMac 12 核版本配备 4 个雷雳 4 端口、标配带触控 ID 的同色系妙控键盘，并支持选配纳米纹理玻璃显示屏与 2.5Gb 以太网。"
       },
       {
         q: "21. 顾客拿着老款 Intel 或 M1 芯片电脑来店咨询升级搭载 M6 芯片的 14 英寸 MacBook Pro，关于续航、性能释放和快充表现，以下哪项介绍准确？",
@@ -921,7 +942,8 @@
           "C. 续航最长可达 22 小时，必须搭配 140W 电源适配器才能在 30 分钟内充至 50% 电量",
           "D. 续航最长可达 24 小时（比 Intel 机型增加最长 14 小时，比 M1 机型增加最长 4 小时），插电与使用电池均能满血释放性能，搭配 96W 及以上适配器 30 分钟可充至最多 50% 电量"
         ],
-        answer: 3
+        answer: 3,
+        explanation: "搭载 M6 芯片的 14 英寸 MacBook Pro 最长续航达 24 小时（比 Intel 机型多 14 小时，比 M1 多 4 小时），插电与电池供电均满血释放性能，搭配 96W 及以上适配器 30 分钟可充至最多 50%。"
       }
     ];
 

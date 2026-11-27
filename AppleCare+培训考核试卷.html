@@ -629,11 +629,12 @@
     <div class="hero-header">
       <div class="hero-title">
         <h1>AppleCare+ 培训考核试卷</h1>
-        <p>服务计划与保障权益考核 · 共 20 题（单项选择） · 百分制（满分 100 分）</p>
+        <p>服务计划与保障权益考核 · 共 10 题（单项选择） · 百分制（满分 100 分）</p>
       </div>
       <div class="hero-actions">
+        <a class="action-pill secondary" href="./index.html" style="text-decoration: none;">⬅️ 返回选择试卷</a>
         <button class="action-pill" onclick="toggleQRPanel()">📱 扫码多端答题</button>
-        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 实时排行榜</button>
+        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 排行榜</button>
         <div class="score-badge" id="score-display">满分：100 分</div>
       </div>
     </div>
@@ -672,8 +673,8 @@
     </div>
 
     <div class="notice-bar">
-      <span>规则说明：每题 5 分（共 20 题单项选择），交卷后锁定不可修改并实时同步至多设备排行榜</span>
-      <span class="progress-text" id="progress-display">已答：0 / 20 题</span>
+      <span>规则说明：每题 10 分（共 10 题单项选择），交卷后锁定不可修改并实时同步至多设备排行榜</span>
+      <span class="progress-text" id="progress-display">已答：0 / 10 题</span>
     </div>
 
     <div id="quiz-list"></div>
@@ -681,6 +682,7 @@
     <div class="btn-row">
       <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">提交试卷并同步上榜</button>
       <button class="reset-btn" id="reset-btn" onclick="resetQuizForNextUser()">🔄 下一位考生答题</button>
+      <a href="./index.html" style="flex: 1; min-width: 140px; padding: 16px; background: #f2f2f7; color: #1d1d1f; border: 1.5px solid #d2d2d7; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">⬅️ 返回选择试卷</a>
     </div>
 
     <div class="result-banner" id="result-banner"></div>
@@ -688,8 +690,7 @@
     <div class="leaderboard-section" id="leaderboard-section">
       <div class="leaderboard-header">
         <div class="leaderboard-title">
-          <span>🏆 跨设备实时排行榜</span>
-          <span class="leaderboard-sub">（支持 GitHub Pages 与本地打开 · 不同设备提交自动同步至同一榜单）</span>
+          <span>🏆 排行榜</span>
         </div>
         <div class="leaderboard-actions">
           <button class="small-btn gray" onclick="syncFromCloud(true)">🔄 刷新榜单</button>
@@ -747,7 +748,7 @@
     const STORAGE_KEY = "applecare_quiz_leaderboard_v1";
     const CLEAR_TS_KEY = STORAGE_KEY + "_clear_ts";
 
-    const questions = [
+        const questions = [
       {
         tag: "电池服务",
         q: "1. 客户带着一台购买了AppleCare+的iPhone来到天才吧，抱怨电池不耐用。在什么情况下，我们可以为客户提供免费的电池更换服务？",
@@ -757,7 +758,8 @@
           "C. 电池最大容量低于原始容量的80%时",
           "D. 只要在AppleCare+两年保障期内，随时可以免费更换"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "在 AppleCare+ 保障期内，当设备电池蓄电容量低于原始容量的 80% 时，顾客即可享受免费的电池更换服务。"
       },
       {
         tag: "意外损坏次数",
@@ -768,18 +770,20 @@
           "C. 每年最多3次",
           "D. 不限次数（每次需收取相应的服务费）"
         ],
-        answer: 3
+        answer: 3,
+        explanation: "现行 AppleCare+ 服务计划提供不限次数的意外损坏保修服务，每次服务收取相应的固定服务费。"
       },
       {
         tag: "iPhone 服务费",
-        q: "3. 一位客户的iPhone 15 Pro屏幕不慎摔碎，且该设备仍在AppleCare+保障期内。请问为客户更换屏幕需要收取多少服务费？",
+        q: "3. 一位客户的iPhone 18 Pro屏幕不慎摔碎，且该设备仍在AppleCare+保障期内。请问为客户更换屏幕需要收取多少服务费？",
         options: [
           "A. 免费",
           "B. 188元",
           "C. 628元",
           "D. 799元"
         ],
-        answer: 1
+        answer: 1,
+        explanation: "iPhone 在 AppleCare+ 保障下，屏幕或机背玻璃损坏的服务费为 RMB 188/次；对于其他任何意外损坏，服务费为 RMB 628/次。"
       },
       {
         tag: "Mac 保障期限",
@@ -790,7 +794,8 @@
           "C. 3年",
           "D. 4年"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "适用于 Mac 的 AppleCare+ 服务计划可提供自购买该服务之日起长达 3 年的专家技术支持和额外硬件保修服务。"
       },
       {
         tag: "Mac 服务费",
@@ -801,7 +806,8 @@
           "C. 2299元",
           "D. 368元"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "Mac 在 AppleCare+ 保障下，屏幕损坏或机身外壳损坏的服务费为 RMB 799/次；对于液体泼溅导致的内部主板损坏等其他意外损坏，服务费为 RMB 2299/次。"
       },
       {
         tag: "iPad 附件保障",
@@ -812,18 +818,20 @@
           "C. 与该iPad同时购买的Apple 妙控键盘 (Magic Keyboard)",
           "D. 客户单独购买并连接该iPad使用的AirPods"
         ],
-        answer: 3
+        answer: 3,
+        explanation: "适用于 iPad 的 AppleCare+ 保障范围涵盖 iPad 主机、随附电池与电源适配器/充电线，以及搭配使用的一支 Apple Pencil 和一个 Apple 品牌 iPad 键盘，但不包含 AirPods 耳机（AirPods 需单独购买对应的 AppleCare+）。"
       },
       {
         tag: "Apple Watch 服务费",
-        q: "7. 两位客户分别带着损坏的手表来到天才吧：客户 A 的 Apple Watch Series 9 屏幕不慎磕碎了；客户 B 的 Apple Watch Ultra 2 潜水时意外磕碰导致进水无法开机。这两位客户都在保障期内拥有 AppleCare+，请问他们分别需要支付多少意外损坏服务费？",
+        q: "7. 两位客户分别带着损坏的手表来到天才吧：客户 A 的 Apple Watch Series 12 屏幕不慎磕碎了；客户 B 的 Apple Watch Ultra 4 潜水时意外磕碰导致进水无法开机。这两位客户都在保障期内拥有 AppleCare+，请问他们分别需要支付多少意外损坏服务费？",
         options: [
           "A. 两位客户都需要支付 528 元",
-          "B. Series 9 是 188 元，Ultra 2 是 528 元",
-          "C. Series 9 是 528 元，Ultra 2 是 598 元",
+          "B. Series 12 是 188 元，Ultra 4 是 528 元",
+          "C. Series 12 是 528 元，Ultra 4 是 598 元",
           "D. 两位客户都需要支付 598 元"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "Apple Watch 在 AppleCare+ 保障下的意外损坏服务费标准为：Apple Watch（不含 Ultra 与 Hermès）每次收取 RMB 528；Apple Watch Ultra 与 Hermès 每次收取 RMB 598。"
       },
       {
         tag: "补购时效",
@@ -834,7 +842,8 @@
           "C. 30天",
           "D. 一年"
         ],
-        answer: 3
+        answer: 3,
+        explanation: "在中国大陆地区，顾客可在购买新设备之日起 60 天内在线或电话加购，而在 Apple Store 零售店经过硬件检测与完好确认后，最晚可在购买（激活）后 1 年内补购 AppleCare+。"
       },
       {
         tag: "全球联保",
@@ -845,18 +854,20 @@
           "C. 可以在全球提供Apple维修服务的国家或地区获得服务，但维修或更换的部件可能受当地供应情况限制",
           "D. 跨国维修需要额外支付高昂的跨境手续费"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "AppleCare+ 支持全球维修服务，但服务选项、部件供应情况及响应时间可能因国家或地区而异。"
       },
       {
         tag: "综合意外损坏",
-        q: "10. 客户的iPhone 14不仅屏幕碎裂，背面玻璃也碎了，且边框严重变形弯曲。在AppleCare+保障下，这属于“其他损坏”，客户需要支付多少服务费？",
+        q: "10. 客户的iPhone不仅屏幕碎裂，背面玻璃也碎了，且边框严重变形弯曲。在AppleCare+保障下，这属于“其他损坏”，客户需要支付多少服务费？",
         options: [
           "A. 188元",
           "B. 376元 (188元 + 188元)",
           "C. 628元",
           "D. 1428元"
         ],
-        answer: 2
+        answer: 2,
+        explanation: "当 iPhone 除屏幕/背板玻璃外还伴有中框严重弯曲变形或其他综合硬件损坏时，按“其他任何损坏”标准收取 RMB 628 服务费。"
       }
     ];
 

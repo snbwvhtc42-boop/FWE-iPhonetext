@@ -632,8 +632,9 @@
         <p>产品知识问答考核 · 共 10 题（不定项选择） · 百分制（满分 100 分）</p>
       </div>
       <div class="hero-actions">
+        <a class="action-pill secondary" href="./index.html" style="text-decoration: none;">⬅️ 返回选择试卷</a>
         <button class="action-pill" onclick="toggleQRPanel()">📱 扫码多端答题</button>
-        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 实时排行榜</button>
+        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 排行榜</button>
         <div class="score-badge" id="score-display">满分：100 分</div>
       </div>
     </div>
@@ -681,6 +682,7 @@
     <div class="btn-row">
       <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">提交试卷并同步上榜</button>
       <button class="reset-btn" id="reset-btn" onclick="resetQuizForNextUser()">🔄 下一位考生答题</button>
+      <a href="./index.html" style="flex: 1; min-width: 140px; padding: 16px; background: #f2f2f7; color: #1d1d1f; border: 1.5px solid #d2d2d7; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">⬅️ 返回选择试卷</a>
     </div>
 
     <div class="result-banner" id="result-banner"></div>
@@ -688,8 +690,7 @@
     <div class="leaderboard-section" id="leaderboard-section">
       <div class="leaderboard-header">
         <div class="leaderboard-title">
-          <span>🏆 跨设备实时排行榜</span>
-          <span class="leaderboard-sub">（支持 GitHub Pages 与本地打开 · 不同设备提交自动同步至同一榜单）</span>
+          <span>🏆 排行榜</span>
         </div>
         <div class="leaderboard-actions">
           <button class="small-btn gray" onclick="syncFromCloud(true)">🔄 刷新榜单</button>

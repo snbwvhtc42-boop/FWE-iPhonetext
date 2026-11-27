@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>配件知识测试考核试卷</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #eef2f7 0%, #e4ebf5 100%);
+      color: #1d1d1f;
+      padding: 24px 14px 60px;
+      line-height: 1.6;
+    }
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-header {
+      background: linear-gradient(120deg, #1d1d1f 0%, #2c3e50 50%, #0071e3 100%);
+      color: #ffffff;
+      padding: 26px 24px;
+      border-radius: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 20px rgba(0, 113, 227, 0.18);
+    }
+    .hero-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .hero-title p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.88);
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .score-badge {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .action-pill {
+      background: #ffffff;
+      color: #0071e3;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+    .action-pill:hover {
+      transform: translateY(-1px);
+      background: #f0f7ff;
+    }
+    .action-pill.secondary {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: none;
+    }
+    .action-pill.secondary:hover {
+      background: rgba(255, 255, 255, 0.26);
+    }
+    .qr-panel {
+      display: none;
+      background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
+      border: 1.5px solid #cfe2ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .qr-panel.active {
+      display: flex;
+    }
+    .qr-info {
+      flex: 1;
+      min-width: 240px;
+    }
+    .qr-info h3 {
+      font-size: 17px;
+      color: #0071e3;
+      margin-bottom: 6px;
+    }
+    .qr-info p {
+      font-size: 13.5px;
+      color: #48484a;
+      margin-bottom: 10px;
+    }
+    .url-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .url-row input {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #1d1d1f;
+      background: #ffffff;
+    }
+    .qr-code-box {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .qr-code-box img {
+      width: 148px;
+      height: 148px;
+      display: block;
+      margin: 0 auto;
+    }
+    .qr-caption {
+      font-size: 12px;
+      color: #6e6e73;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+    .user-bar {
+      background: #f5f7fa;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .user-inputs {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 180px;
+    }
+    .input-group label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1d1d1f;
+      white-space: nowrap;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+      background: #ffffff;
+    }
+    .input-group input:focus {
+      border-color: #0071e3;
+    }
+    .input-group input:disabled {
+      background: #ebebf0;
+      color: #6e6e73;
+    }
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d1d1f;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .timer-val {
+      color: #0071e3;
+      font-variant-numeric: tabular-nums;
+      font-size: 16px;
+    }
+    .sync-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e8f8ee;
+      color: #1e7e34;
+      cursor: pointer;
+      user-select: none;
+    }
+    .sync-badge.syncing {
+      background: #eef6ff;
+      color: #0071e3;
+    }
+    .sync-badge.local {
+      background: #fff8e6;
+      color: #8a5a00;
+    }
+    .notice-bar {
+      background: #fff8e6;
+      color: #8a5a00;
+      border: 1px solid #ffe3a3;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .progress-text {
+      color: #0071e3;
+      font-weight: 700;
+    }
+    .question-card {
+      background: #fafafa;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+    .question-card.correct {
+      border-color: #34c759;
+      background: #f2fbf5;
+    }
+    .question-card.wrong {
+      border-color: #ff3b30;
+      background: #fff5f5;
+    }
+    .question-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: #1d1d1f;
+    }
+    .tag {
+      display: inline-block;
+      background: #e8f2ff;
+      color: #0071e3;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .score-tag {
+      color: #6e6e73;
+      font-size: 13px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      border: 1.5px solid #d2d2d7;
+      border-radius: 10px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .option-label:hover:not(.locked) {
+      border-color: #0071e3;
+      background: #f5f9ff;
+    }
+    .option-label.selected:not(.locked) {
+      border-color: #0071e3;
+      background: #eef6ff;
+      font-weight: 600;
+    }
+    .option-label.correct-answer {
+      border-color: #34c759;
+      background: #e8f8ee;
+      color: #1e7e34;
+      font-weight: 600;
+    }
+    .option-label.wrong-answer {
+      border-color: #ff3b30;
+      background: #ffeceb;
+      color: #d70015;
+      font-weight: 600;
+    }
+    .option-label.locked {
+      cursor: not-allowed;
+    }
+    .option-label input {
+      width: 18px;
+      height: 18px;
+      accent-color: #0071e3;
+      cursor: inherit;
+      flex-shrink: 0;
+    }
+    .status-msg {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      display: none;
+    }
+    .question-card.correct .status-msg {
+      display: block;
+      color: #248a3d;
+    }
+    .question-card.wrong .status-msg {
+      display: block;
+      color: #d70015;
+    }
+    .explanation-box {
+      margin-top: 10px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.88);
+      border-left: 4px solid #0071e3;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #3a3a3c;
+      line-height: 1.65;
+      display: none;
+    }
+    .question-card.correct .explanation-box,
+    .question-card.wrong .explanation-box {
+      display: block;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .submit-btn {
+      flex: 2;
+      min-width: 200px;
+      padding: 16px;
+      background: #0071e3;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: #005bb5;
+    }
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+    .submit-btn:disabled {
+      background: #a1a1a6;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .reset-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 16px;
+      background: #1d1d1f;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: none;
+    }
+    .reset-btn:hover {
+      background: #3a3a3c;
+    }
+    .result-banner {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .result-banner.full-mark {
+      display: block;
+      background: linear-gradient(135deg, #e8f8ee 0%, #d1f4de 100%);
+      color: #156229;
+      border: 2px solid #34c759;
+      box-shadow: 0 8px 24px rgba(52, 199, 89, 0.2);
+    }
+    .result-banner.normal-mark {
+      display: block;
+      background: #f2f2f7;
+      color: #1d1d1f;
+      border: 1.5px solid #d2d2d7;
+    }
+    .leaderboard-section {
+      margin-top: 32px;
+      background: #fafafa;
+      border: 1.5px solid #e5e5ea;
+      border-radius: 18px;
+      padding: 24px;
+    }
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .leaderboard-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #1d1d1f;
+      flex-wrap: wrap;
+    }
+    .leaderboard-sub {
+      font-size: 13px;
+      color: #6e6e73;
+      font-weight: 500;
+    }
+    .leaderboard-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .small-btn {
+      padding: 8px 14px;
+      background: #0071e3;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .small-btn:hover {
+      background: #005bb5;
+    }
+    .small-btn.gray {
+      background: #e5e5ea;
+      color: #1d1d1f;
+    }
+    .small-btn.gray:hover {
+      background: #d2d2d7;
+    }
+    .small-btn.danger {
+      background: #ffeceb;
+      color: #d70015;
+    }
+    .small-btn.danger:hover {
+      background: #ffd8d6;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid #e5e5ea;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #6e6e73;
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0071e3;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e5ea;
+    }
+    table.rank-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: left;
+    }
+    table.rank-table th {
+      background: #f5f7fa;
+      color: #6e6e73;
+      font-weight: 700;
+      padding: 12px 14px;
+      border-bottom: 1px solid #e5e5ea;
+      white-space: nowrap;
+    }
+    table.rank-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #f0f0f5;
+      color: #1d1d1f;
+      white-space: nowrap;
+    }
+    table.rank-table tr:last-child td {
+      border-bottom: none;
+    }
+    table.rank-table tr.highlight-row {
+      background: #eef6ff;
+      font-weight: 600;
+    }
+    .rank-medal {
+      font-size: 16px;
+      font-weight: 700;
+      display: inline-block;
+      min-width: 28px;
+      text-align: center;
+    }
+    .score-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      background: #eef6ff;
+      color: #0071e3;
+    }
+    .score-pill.full {
+      background: #e8f8ee;
+      color: #1e7e34;
+    }
+    .empty-rank {
+      text-align: center;
+      padding: 28px;
+      color: #86868b;
+      font-size: 14px;
+    }
+    @media (max-width: 640px) {
+      .container {
+        padding: 18px 14px;
+      }
+      .hero-header {
+        padding: 20px 16px;
+      }
+      .hero-title h1 {
+        font-size: 20px;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .qr-panel {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .qr-code-box {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="container">
+    <div class="hero-header">
+      <div class="hero-title">
+        <h1>配件知识测试考核试卷</h1>
+        <p>40W/20W 充电器 · AirPods 系列 · HomePod 系列考核 · 共 10 题（不定项选择） · 满分 100 分</p>
+      </div>
+      <div class="hero-actions">
+        <a class="action-pill secondary" href="./index.html" style="text-decoration: none;">⬅️ 返回选择试卷</a>
+        <button class="action-pill" onclick="toggleQRPanel()">📱 扫码多端答题</button>
+        <button class="action-pill secondary" onclick="scrollToLeaderboard()">🏆 排行榜</button>
+        <div class="score-badge" id="score-display">满分：100 分</div>
+      </div>
+    </div>
+
+    <div class="qr-panel" id="qr-panel">
+      <div class="qr-info">
+        <h3>📱 手机 / iPad 扫码多设备同步答题</h3>
+        <p>部署在 GitHub Pages 后，同事直接用手机或 iPad 扫描右侧二维码即可打开本试卷，交卷后成绩实时汇总至下方排行榜。</p>
+        <div class="url-row">
+          <input type="text" id="share-url-input" value="" placeholder="当前网页链接（自动获取或手动粘贴）" onchange="updateQRCode()" />
+          <button class="small-btn" onclick="updateQRCode()">生成二维码</button>
+          <button class="small-btn gray" onclick="copyShareUrl()">复制链接</button>
+        </div>
+      </div>
+      <div class="qr-code-box">
+        <div id="qr-container"></div>
+        <div class="qr-caption">相机扫码立即答题</div>
+      </div>
+    </div>
+
+    <div class="user-bar" id="user-bar">
+      <div class="user-inputs">
+        <div class="input-group">
+          <label for="user-name">考生姓名：</label>
+          <input type="text" id="user-name" placeholder="请输入姓名或昵称（必填）" maxlength="24" oninput="startTimerIfNeeded()" />
+        </div>
+        <div class="input-group">
+          <label for="user-dept">部门/门店：</label>
+          <input type="text" id="user-dept" placeholder="选填，如 Product Zone" maxlength="24" oninput="startTimerIfNeeded()" />
+        </div>
+      </div>
+      <div class="timer-box">
+        <span>⏱️ 用时：<span class="timer-val" id="timer-display">00:00</span></span>
+        <span class="sync-badge" id="sync-status" onclick="syncFromCloud(true)" title="点击立即同步多设备最新排行榜">🟢 多设备云同步就绪</span>
+      </div>
+    </div>
+
+    <div class="notice-bar">
+      <span>规则说明：每题 10 分（不定项选择，多选、少选或错选均不得分），交卷后锁定不可修改并实时同步至多设备排行榜</span>
+      <span class="progress-text" id="progress-display">已答：0 / 10 题</span>
+    </div>
+
+    <div id="quiz-list"></div>
+
+    <div class="btn-row">
+      <button class="submit-btn" id="submit-btn" onclick="submitQuiz()">提交试卷并同步上榜</button>
+      <button class="reset-btn" id="reset-btn" onclick="resetQuizForNextUser()">🔄 下一位考生答题</button>
+      <a href="./index.html" style="flex: 1; min-width: 140px; padding: 16px; background: #f2f2f7; color: #1d1d1f; border: 1.5px solid #d2d2d7; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center;">⬅️ 返回选择试卷</a>
+    </div>
+
+    <div class="result-banner" id="result-banner"></div>
+
+    <div class="leaderboard-section" id="leaderboard-section">
+      <div class="leaderboard-header">
+        <div class="leaderboard-title">
+          <span>🏆 排行榜</span>
+        </div>
+        <div class="leaderboard-actions">
+          <button class="small-btn gray" onclick="syncFromCloud(true)">🔄 刷新榜单</button>
+          <button class="small-btn gray" onclick="exportLeaderboardCSV()">📥 导出成绩(CSV)</button>
+          <button class="small-btn danger" onclick="clearLeaderboard()">🗑️ 清空榜单</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">参考人数</div>
+          <div class="stat-value" id="stat-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">最高得分</div>
+          <div class="stat-value" id="stat-max">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">平均得分</div>
+          <div class="stat-value" id="stat-avg">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">满分人数</div>
+          <div class="stat-value" id="stat-full">0</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="rank-table">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>姓名</th>
+              <th>部门 / 门店</th>
+              <th>得分</th>
+              <th>答对题数</th>
+              <th>答题用时</th>
+              <th>设备端</th>
+              <th>提交时间</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="8" class="empty-rank">暂无考核记录，快来提交第一份满分答卷吧！</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CLOUD_TOPIC = "lynn_acc_quiz_lb_2026_v1";
+    const NTFY_BASE = "https://ntfy.sh/" + CLOUD_TOPIC;
+    const STORAGE_KEY = "acc_quiz_leaderboard_v1";
+    const CLEAR_TS_KEY = STORAGE_KEY + "_clear_ts";
+
+    const questions = [
+      {
+            "tag": "40W 动态电源适配器",
+            "q": "1. 关于 Apple 40W 动态电源适配器 (最高 60W) 的核心设计与技术特性，以下哪些说法是正确的？",
+            "options": [
+                  "A. 独特的设计可动态提供最高 60 瓦输出功率，充电速度得以大幅提升",
+                  "B. 机身紧凑便携，支持动态功率调节，充电效率可以媲美高功率充电器，适合在家中、办公室或外出使用",
+                  "C. 具备可调电压供电 (AVS) 功能，可精准调节电压，提高充电效率",
+                  "D. 最高输出功率固定为 40W，无法超过 40W 输出"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "40W 动态电源适配器 (最高 60W) 采用独特紧凑设计，支持动态功率调节并提供最高 60W 输出功率，具备可调电压供电 (AVS) 功能以精准调节电压、提高充电效率（故 D 错误）。"
+      },
+      {
+            "tag": "40W 快充速度",
+            "q": "2. 使用 40W 动态电源适配器 (最高 60W) 为各款设备进行快速充电，关于充至最高/最多 50% 电量所需的时间，以下哪些对应关系完全正确？",
+            "options": [
+                  "A. iPhone 18 Pro、iPhone 18 Pro Max：约 15 分钟最多可充至 50% 电量",
+                  "B. iPhone Duo：约 20 分钟最多可充至 50% 电量；iPhone 17、iPhone 17 Pro 或 iPhone 17 Pro Max：20 分钟最多可充至 50% 电量",
+                  "C. iPhone Air：30 分钟最多可充至 50% 电量",
+                  "D. 搭配 13 英寸 iPad Pro 各款机型使用时：35 分钟最多可充至 50% 电量"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2,
+                  3
+            ],
+            "answerText": "A、B、C、D",
+            "explanation": "四项快充数据完全准确：使用 40W 动态电源适配器充至最多 50% 电量，iPhone 18 Pro / Pro Max 约 15 分钟，iPhone Duo 约 20 分钟，iPhone 17 / 17 Pro / 17 Pro Max 为 20 分钟，iPhone Air 为 30 分钟，13 英寸 iPad Pro 各款机型为 35 分钟。"
+      },
+      {
+            "tag": "20W 电源适配器",
+            "q": "3. 关于 Apple 20W USB-C 电源适配器的性能与适用场景，以下哪些描述符合产品资料？",
+            "options": [
+                  "A. 无论在家中、办公室还是旅行途中，都能提供快速而高效的充电体验",
+                  "B. 与 iPhone 8 或后续机型搭配使用进行快速充电，约 35 分钟最多可充至 50% 电量",
+                  "C. 可用于为 iPad Pro 和 iPad Air 充电，发挥出色充电性能",
+                  "D. 为 iPhone 18 Pro 充电时同样可在 15 分钟内充至 50% 电量"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "Apple 20W USB-C 电源适配器搭配 iPhone 8 或后续机型快充时，约 35 分钟最多可充至 50% 电量，并支持为 iPad Pro 和 iPad Air 高效充电；iPhone 18 Pro 约 15 分钟充至 50% 需搭配 40W 动态电源适配器（最高 60W）等高功率兼容适配器（D 错误）。"
+      },
+      {
+            "tag": "AirPods 芯片与降噪",
+            "q": "4. 对比 AirPods 5 (配无线充电盒)、AirPods Pro 3 与 AirPods 5 三款机型，关于芯片与音频降噪技术，以下哪些说法是正确的？",
+            "options": [
+                  "A. 三款机型均搭载 H2 耳机芯片，且 AirPods Pro 3 的 MagSafe 充电盒还内置了 Apple 第二代超宽带技术芯片",
+                  "B. 两款 AirPods 5 的主动降噪效果相较 AirPods 4 (支持主动降噪) 最高提升至 1.5 倍；AirPods Pro 3 的主动降噪效果最高可达 AirPods 5 的 3 倍",
+                  "C. 三款机型均支持主动降噪、自适应音频、通透模式、对话感知、语音突显、个性化音量及支持动态头部追踪的个性化空间音频",
+                  "D. 标准版 AirPods 5（配 USB-C 充电盒）不支持主动降噪和对话感知"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "三款机型均搭载 H2 芯片，均支持主动降噪、自适应音频、通透模式、对话感知、语音突显、个性化音量与动态头部追踪空间音频（故 D 错误）；两款 AirPods 5 主动降噪较 AirPods 4 最高提升至 1.5 倍，AirPods Pro 3 主动降噪最高达 AirPods 5 的 3 倍，且 MagSafe 充电盒内置第二代超宽带芯片。"
+      },
+      {
+            "tag": "AirPods Pro 3 专属特性",
+            "q": "5. 在当前 AirPods 产品线中，以下哪些特性是 AirPods Pro 3 独有（而两款 AirPods 5 不具备）的？",
+            "options": [
+                  "A. 内置适用于体能训练的心率传感器，锻炼时能测心率（配合运行 iOS 26 及更新系统的 iPhone 健身 app 使用）",
+                  "B. 配备皮肤识别传感器（两款 AirPods 5 配备的是入耳检测光学传感器）",
+                  "C. 支持“降低高音量”、“对话增强”与“背景音”听力功能",
+                  "D. 包装内随附五种尺寸的硅胶耳塞（XXS、XS、S、M、L）"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2,
+                  3
+            ],
+            "answerText": "A、B、C、D",
+            "explanation": "以上四项（体能训练心率传感功能、皮肤识别传感器、降低高音量/对话增强/背景音三项听力功能，以及 XXS 至 L 五种尺寸硅胶耳塞）均为 AirPods Pro 3 独有的核心卖点。"
+      },
+      {
+            "tag": "AirPods 触控与交互",
+            "q": "6. 关于 AirPods 5 (配无线充电盒)、AirPods Pro 3 与 AirPods 5 的操控方式，以下哪些描述是准确的？",
+            "options": [
+                  "A. AirPods 5 (配无线充电盒) 与 AirPods Pro 3 的力度感应器均支持“上下轻扫调节音量”，而基础款 AirPods 5 不支持轻扫调节音量",
+                  "B. 三款机型均支持按一下播放/暂停、接听电话、静音/取消静音，以及按一下启用相机遥控器",
+                  "C. 三款机型均支持按两下结束通话或跳至下一曲目、按三下跳回上一曲目、按住在不同聆听模式之间切换",
+                  "D. 三款机型均支持直接说声“嘿 Siri”或“Siri”唤醒语音助手，且均支持“Siri 互动方式”"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2,
+                  3
+            ],
+            "answerText": "A、B、C、D",
+            "explanation": "三款机型在按压操作、启用相机遥控器及 Siri 互动方式上全部一致；核心操作差异在于 AirPods 5 (配无线充电盒) 与 AirPods Pro 3 支持在耳机柄上“上下轻扫调节音量”，而基础款 AirPods 5 的力度感应器不支持轻扫调音量。"
+      },
+      {
+            "tag": "AirPods 续航表现",
+            "q": "7. 关于三款 AirPods 在启用主动降噪模式下的电池续航时间，以下哪些数据完全正确？",
+            "options": [
+                  "A. AirPods Pro 3：单次充电续航最长可达 8 小时，搭配充电盒使用最长可达 24 小时",
+                  "B. AirPods 5 (配无线充电盒)：单次充电续航最长可达 5 小时，搭配充电盒使用最长可达 22 小时",
+                  "C. AirPods 5：单次充电续航最长可达 4 小时，搭配充电盒使用最长可达 20 小时",
+                  "D. 三款机型均支持在充电盒中充电 5 分钟即可获得大约 1 小时的续航时间"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2,
+                  3
+            ],
+            "answerText": "A、B、C、D",
+            "explanation": "启用主动降噪时，单次续航依次为：AirPods Pro 3 最长 8 小时（关闭主动降噪或启用心率监测时略有不同）、无线充电盒款 AirPods 5 最长 5 小时（关闭噪声控制最长 7 小时）、AirPods 5 最长 4 小时（关闭噪声控制最长 6 小时）；搭配充电盒启用主动降噪总续航依次为 24 小时、22 小时、20 小时。"
+      },
+      {
+            "tag": "充电盒与防尘抗水",
+            "q": "8. 关于三款 AirPods 的充电盒功能及防尘抗汗抗水等级，以下哪些说法是正确的？",
+            "options": [
+                  "A. 三款机型（包含耳机与充电盒）均达到 IP57 级别防尘且抗汗抗水",
+                  "B. AirPods Pro 3 配备 MagSafe 充电盒 (USB-C)，内置扬声器可用于查找功能，且自带挂绳孔",
+                  "C. AirPods 5 (配无线充电盒) 与 AirPods Pro 3 的充电盒均支持通过 Apple Watch 充电器和 Qi 认证充电器进行无线充电，且均内置扬声器支持查找功能",
+                  "D. 标准版 AirPods 5 配备的充电盒 (USB-C) 同样内置扬声器并支持无线充电"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "A、B、C 项均正确：三款机型均达到 IP57 防尘抗汗抗水级别；AirPods Pro 3 与无线充电盒款 AirPods 5 的充电盒均内置查找扬声器并支持 Apple Watch 充电器及 Qi 无线充电（Pro 3 还支持 MagSafe 与挂绳孔）；D 项错误：标准版 AirPods 5 的充电盒 (USB-C) 仅支持 USB-C 有线充电，无内置扬声器。"
+      },
+      {
+            "tag": "HomePod 音质与接力",
+            "q": "9. 在向顾客介绍 HomePod 与 HomePod mini 的音乐体验和生态联动时，以下哪些亮点描述是准确的？",
+            "options": [
+                  "A. 采用 360 度环绕声学设计，放置在房间任意位置都能呈现饱满立体的音效",
+                  "B. 支持音频接力功能，下班回家将 iPhone 靠近 HomePod 顶部即可无缝将手机上播放的音乐接力到音箱播放",
+                  "C. 在同一房间部署两台同款 HomePod（或两台 HomePod mini）可配对组建成立体声组合，还可搭配 Apple TV 4K 打造家庭影院音效",
+                  "D. HomePod 每次使用前都必须进入手机设置手动搜索并配对普通蓝牙才可播放音乐"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2
+            ],
+            "answerText": "A、B、C",
+            "explanation": "HomePod 系列支持 360 度环绕声场、iPhone 靠近顶部一键音频接力、隔空播放 (AirPlay) 以及双机立体声组合与 Apple TV 4K 家庭影院联动，无需像传统蓝牙音箱那样每次手动配对蓝牙（D 错误）。"
+      },
+      {
+            "tag": "HomePod 智能家居与场景",
+            "q": "10. 关于 HomePod 系列的智能家居能力与门店场景化推荐思路，以下哪些说法是正确的？",
+            "options": [
+                  "A. 可作为家庭中枢，支持 Matter 与 Thread 智能家居连接标准，轻松通过 Siri 语音控制全屋智能设备",
+                  "B. 内置温度和湿度感应器，可测量室内环境并设置自动化（如温度达到设定值时自动开启风扇或窗帘）",
+                  "C. 支持“广播 (Intercom)”功能，可通过 iPhone、iPad、Apple Watch 或各房间的 HomePod 向全屋家庭成员发送语音通知",
+                  "D. 当顾客选购乔迁聚会礼物或希望提升居家生活幸福感时，HomePod mini 兼具高颜值织物外观、亲民价位与节日音乐氛围，是非常理想的推荐选择"
+            ],
+            "answer": [
+                  0,
+                  1,
+                  2,
+                  3
+            ],
+            "answerText": "A、B、C、D",
+            "explanation": "HomePod 与 HomePod mini 集成了智能家居中枢（支持 Matter/Thread）、内置温湿度传感器、家庭广播 (Intercom) 与 Siri 语音助手，既能打造智能家居闭环，又是乔迁聚会和居家氛围提升的绝佳好礼。"
+      }
+];
+
+    const perScore = 100 / questions.length;
+    let answeredState = questions.map(() => new Set());
+    let submitted = false;
+    let audioCtx = null;
+    let timerInterval = null;
+    let startTimeMs = null;
+    let elapsedSeconds = 0;
+    let lastSubmittedId = null;
+    let leaderboardData = [];
+    let confettiAnimId = null;
+    let syncInProgress = false;
+
+    function detectDeviceLabel() {
+      const ua = navigator.userAgent || "";
+      if (/iPhone/i.test(ua)) return "iPhone";
+      if (/iPad/i.test(ua)) return "iPad";
+      if (/Android/i.test(ua)) return "Android";
+      if (/Macintosh/i.test(ua)) return "Mac";
+      return "电脑端";
+    }
+
+    function formatDuration(sec) {
+      const s = Math.max(0, Math.floor(sec));
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`;
+    }
+
+    function startTimerIfNeeded() {
+      if (submitted || timerInterval) return;
+      startTimeMs = Date.now() - elapsedSeconds * 1000;
+      timerInterval = setInterval(() => {
+        elapsedSeconds = Math.floor((Date.now() - startTimeMs) / 1000);
+        document.getElementById("timer-display").textContent = formatDuration(elapsedSeconds);
+      }, 500);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playClickSound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(660, ctx.currentTime);
+        gain.gain.setValueAtTime(0.06, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.06);
+      } catch (e) {}
+    }
+
+    function playSubmitSound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const notes = [
+          { f: 523.25, d: 0.12 },
+          { f: 659.25, d: 0.18 }
+        ];
+        let t = ctx.currentTime;
+        notes.forEach(n => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(n.f, t);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + n.d);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + n.d);
+          t += n.d;
+        });
+      } catch (e) {}
+    }
+
+    function playVictorySound() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const melody = [
+          { f: 523.25, d: 0.14 },
+          { f: 659.25, d: 0.14 },
+          { f: 783.99, d: 0.14 },
+          { f: 1046.50, d: 0.28 },
+          { f: 783.99, d: 0.14 },
+          { f: 1046.50, d: 0.55 }
+        ];
+        let t = ctx.currentTime;
+        melody.forEach(note => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(note.f, t);
+          gain.gain.setValueAtTime(0.3, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + note.d);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + note.d);
+          t += note.d;
+        });
+      } catch (e) {}
+    }
+
+    function renderQuiz() {
+      const listEl = document.getElementById("quiz-list");
+      const scoreLabel = Number.isInteger(perScore) ? perScore : perScore.toFixed(1);
+      listEl.innerHTML = questions.map((item, qIdx) => {
+        const isMulti = Array.isArray(item.answer) && item.multi !== false;
+        const inputType = isMulti ? "checkbox" : "radio";
+        const tagHtml = item.tag ? `<span class="tag">${item.tag}</span>` : "";
+        const expHtml = item.explanation ? `<div class="explanation-box" id="exp-${qIdx}"><strong>解析：</strong>${item.explanation}</div>` : "";
+        return `
+          <div class="question-card" id="card-${qIdx}">
+            <div class="question-title">
+              ${tagHtml}${item.q}
+              <span class="score-tag">（${scoreLabel}分）</span>
+            </div>
+            <div class="options">
+              ${item.options.map((opt, oIdx) => `
+                <label class="option-label" id="label-${qIdx}-${oIdx}">
+                  <input type="${inputType}" name="q-${qIdx}" id="input-${qIdx}-${oIdx}" value="${oIdx}" onchange="handleOptionChange(${qIdx}, ${oIdx}, ${isMulti})" />
+                  <span>${opt}</span>
+                </label>
+              `).join("")}
+            </div>
+            <div class="status-msg" id="status-${qIdx}"></div>
+            ${expHtml}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function handleOptionChange(qIdx, oIdx, isMulti) {
+      if (submitted) return;
+      startTimerIfNeeded();
+      playClickSound();
+
+      if (isMulti) {
+        const input = document.getElementById(`input-${qIdx}-${oIdx}`);
+        const label = document.getElementById(`label-${qIdx}-${oIdx}`);
+        if (input && input.checked) {
+          answeredState[qIdx].add(oIdx);
+          if (label) label.classList.add("selected");
+        } else {
+          answeredState[qIdx].delete(oIdx);
+          if (label) label.classList.remove("selected");
+        }
+      } else {
+        answeredState[qIdx].clear();
+        answeredState[qIdx].add(oIdx);
+        questions[qIdx].options.forEach((_, idx) => {
+          const l = document.getElementById(`label-${qIdx}-${idx}`);
+          if (l) l.classList.toggle("selected", idx === oIdx);
+        });
+      }
+
+      const answeredCount = answeredState.filter(s => s.size > 0).length;
+      document.getElementById("progress-display").textContent = `已答：${answeredCount} / ${questions.length} 题`;
+    }
+
+    function isSameSet(setA, arrB) {
+      if (setA.size !== arrB.length) return false;
+      return arrB.every(idx => setA.has(idx));
+    }
+
+    async function submitQuiz() {
+      if (submitted) return;
+
+      const nameInput = document.getElementById("user-name");
+      const deptInput = document.getElementById("user-dept");
+      const userName = nameInput.value.trim();
+      const userDept = deptInput.value.trim() || "-";
+
+      if (!userName) {
+        alert("请先在顶部输入您的姓名或昵称后再提交试卷");
+        nameInput.focus();
+        nameInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      const unansweredIdx = answeredState.findIndex(s => s.size === 0);
+      if (unansweredIdx !== -1) {
+        alert(`请先完成第 ${unansweredIdx + 1} 题后再提交试卷`);
+        document.getElementById(`card-${unansweredIdx}`).scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      submitted = true;
+      stopTimer();
+      elapsedSeconds = Math.max(1, elapsedSeconds);
+      document.getElementById("timer-display").textContent = formatDuration(elapsedSeconds);
+      nameInput.disabled = true;
+      deptInput.disabled = true;
+
+      let correctCount = 0;
+
+      questions.forEach((item, qIdx) => {
+        const userSet = answeredState[qIdx];
+        const rightArr = Array.isArray(item.answer) ? item.answer : [item.answer];
+        const rightSet = new Set(rightArr);
+        const card = document.getElementById(`card-${qIdx}`);
+        const statusEl = document.getElementById(`status-${qIdx}`);
+
+        item.options.forEach((_, oIdx) => {
+          const inp = document.getElementById(`input-${qIdx}-${oIdx}`);
+          const l = document.getElementById(`label-${qIdx}-${oIdx}`);
+          if (inp) inp.disabled = true;
+          if (l) {
+            l.classList.remove("selected");
+            l.classList.add("locked");
+            if (rightSet.has(oIdx)) {
+              l.classList.add("correct-answer");
+            } else if (userSet.has(oIdx)) {
+              l.classList.add("wrong-answer");
+            }
+          }
+        });
+
+        const correct = isSameSet(userSet, rightArr);
+        const userText = Array.from(userSet).sort((a, b) => a - b).map(i => ["A", "B", "C", "D"][i]).join("、");
+        const rightText = item.answerText || rightArr.map(i => ["A", "B", "C", "D"][i]).join("、");
+        const scoreLabel = Number.isInteger(perScore) ? perScore : perScore.toFixed(1);
+
+        if (correct) {
+          correctCount += 1;
+          card.classList.add("correct");
+          statusEl.textContent = `✓ 回答正确（+${scoreLabel}分） 正确答案：${rightText}`;
+        } else {
+          card.classList.add("wrong");
+          statusEl.textContent = `✗ 回答错误（0分） 你的选择：${userText} ｜ 正确答案：${rightText}`;
+        }
+      });
+
+      const finalScore = Math.round((correctCount / questions.length) * 100);
+      document.getElementById("score-display").textContent = `最终得分：${finalScore} / 100`;
+
+      const btn = document.getElementById("submit-btn");
+      btn.disabled = true;
+      btn.textContent = "试卷已提交并锁定（已同步至多设备排行榜）";
+      document.getElementById("reset-btn").style.display = "inline-block";
+
+      const now = new Date();
+      const timeStr = `${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
+
+      const record = {
+        id: "rec_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+        name: userName,
+        dept: userDept,
+        score: finalScore,
+        correct: correctCount,
+        total: questions.length,
+        duration: elapsedSeconds,
+        device: detectDeviceLabel(),
+        time: timeStr,
+        ts: Date.now()
+      };
+      lastSubmittedId = record.id;
+
+      const banner = document.getElementById("result-banner");
+      if (finalScore === 100) {
+        banner.className = "result-banner full-mark";
+        banner.textContent = `🎉 恭喜 ${userName} 满分通过考核！得分：100 分（答对 ${correctCount}/${questions.length} 题，用时 ${formatDuration(record.duration)}）`;
+        playVictorySound();
+        startConfetti();
+      } else {
+        banner.className = "result-banner normal-mark";
+        banner.textContent = `${userName} 本次考核得分：${finalScore} 分（答对 ${correctCount}/${questions.length} 题，用时 ${formatDuration(record.duration)}），已同步至排行榜`;
+        playSubmitSound();
+      }
+
+      await publishScoreToCloud(record);
+      document.getElementById("leaderboard-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function resetQuizForNextUser() {
+      submitted = false;
+      stopTimer();
+      stopConfetti();
+      elapsedSeconds = 0;
+      startTimeMs = null;
+      answeredState = questions.map(() => new Set());
+
+      document.getElementById("timer-display").textContent = "00:00";
+      document.getElementById("score-display").textContent = "满分：100 分";
+      document.getElementById("progress-display").textContent = `已答：0 / ${questions.length} 题`;
+
+      const nameInput = document.getElementById("user-name");
+      const deptInput = document.getElementById("user-dept");
+      nameInput.disabled = false;
+      deptInput.disabled = false;
+      nameInput.value = "";
+
+      const btn = document.getElementById("submit-btn");
+      btn.disabled = false;
+      btn.textContent = "提交试卷并同步上榜";
+      document.getElementById("reset-btn").style.display = "none";
+
+      const banner = document.getElementById("result-banner");
+      banner.className = "result-banner";
+
+      renderQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => nameInput.focus(), 300);
+    }
+
+    function toggleQRPanel() {
+      const panel = document.getElementById("qr-panel");
+      panel.classList.toggle("active");
+      if (panel.classList.contains("active")) {
+        const input = document.getElementById("share-url-input");
+        if (!input.value.trim() && window.location.protocol.startsWith("http")) {
+          input.value = window.location.href;
+        }
+        updateQRCode();
+      }
+    }
+
+    function updateQRCode() {
+      const input = document.getElementById("share-url-input");
+      const url = input.value.trim() || window.location.href;
+      const qrBox = document.getElementById("qr-container");
+      qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(url)}" alt="扫码答题二维码" />`;
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById("share-url-input");
+      const url = input.value.trim() || window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        alert("答题链接已复制，可直接发送给同事打开！");
+      }).catch(() => {
+        input.select();
+        document.execCommand("copy");
+        alert("答题链接已复制！");
+      });
+    }
+
+    function sortLeaderboard(list) {
+      return [...list].sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (a.duration || 9999) - (b.duration || 9999);
+      });
+    }
+
+    function getLocalLeaderboard() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function setLocalLeaderboard(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function getLocalClearTs() {
+      try {
+        return Number(localStorage.getItem(CLEAR_TS_KEY) || "0");
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function setLocalClearTs(ts) {
+      try {
+        localStorage.setItem(CLEAR_TS_KEY, String(ts));
+      } catch (e) {}
+    }
+
+    function setSyncBadge(stateType, text) {
+      const el = document.getElementById("sync-status");
+      if (!el) return;
+      el.textContent = text;
+      if (stateType === "syncing") el.className = "sync-badge syncing";
+      else if (stateType === "local") el.className = "sync-badge local";
+      else el.className = "sync-badge";
+    }
+
+    async function syncFromCloud(manual = false) {
+      if (syncInProgress) return leaderboardData;
+      syncInProgress = true;
+      if (manual) setSyncBadge("syncing", "🔄 正在同步多端榜单...");
+
+      try {
+        const res = await fetch(`${NTFY_BASE}/json?poll=1&since=all&t=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const text = await res.text();
+          const lines = text.trim() ? text.trim().split("\n") : [];
+          let lastClearTs = getLocalClearTs();
+          const parsedEvents = [];
+
+          for (const line of lines) {
+            try {
+              const outer = JSON.parse(line);
+              if (outer.event === "message" && outer.message) {
+                const payload = JSON.parse(outer.message);
+                const msgTs = payload.ts || (outer.time ? outer.time * 1000 : 0);
+                if (payload.type === "clear") {
+                  if (msgTs > lastClearTs) lastClearTs = msgTs;
+                } else if (payload.type === "sync" || payload.type === "score") {
+                  parsedEvents.push({ payload, msgTs });
+                }
+              }
+            } catch (e) {}
+          }
+
+          if (lastClearTs > getLocalClearTs()) {
+            setLocalClearTs(lastClearTs);
+          }
+
+          const recordMap = new Map();
+          for (const item of getLocalLeaderboard()) {
+            if (item && item.id && (item.ts || 0) > lastClearTs) {
+              recordMap.set(item.id, item);
+            }
+          }
+
+          for (const { payload, msgTs } of parsedEvents) {
+            if (msgTs <= lastClearTs) continue;
+            if (Array.isArray(payload.snapshot)) {
+              for (const rec of payload.snapshot) {
+                if (rec && rec.id && (rec.ts || msgTs) > lastClearTs) {
+                  recordMap.set(rec.id, rec);
+                }
+              }
+            }
+            const single = payload.record || (payload.id ? payload : null);
+            if (single && single.id && (single.ts || msgTs) > lastClearTs) {
+              recordMap.set(single.id, single);
+            }
+          }
+
+          leaderboardData = sortLeaderboard(Array.from(recordMap.values()));
+          setLocalLeaderboard(leaderboardData);
+          renderLeaderboard();
+          setSyncBadge("ok", `🟢 多端实时同步 (${leaderboardData.length}人)`);
+          syncInProgress = false;
+          return leaderboardData;
+        }
+      } catch (e) {}
+
+      leaderboardData = sortLeaderboard(getLocalLeaderboard());
+      renderLeaderboard();
+      setSyncBadge("local", "🟡 离线本机模式");
+      syncInProgress = false;
+      return leaderboardData;
+    }
+
+    async function publishScoreToCloud(record) {
+      const localList = getLocalLeaderboard();
+      localList.push(record);
+      leaderboardData = sortLeaderboard(localList);
+      setLocalLeaderboard(leaderboardData);
+      renderLeaderboard();
+
+      await syncFromCloud(false);
+
+      const map = new Map();
+      for (const r of leaderboardData) {
+        if (r && r.id) map.set(r.id, r);
+      }
+      map.set(record.id, record);
+      leaderboardData = sortLeaderboard(Array.from(map.values()));
+      setLocalLeaderboard(leaderboardData);
+      renderLeaderboard();
+
+      try {
+        const payload = {
+          type: "sync",
+          record: record,
+          snapshot: leaderboardData.slice(0, 10),
+          ts: Date.now()
+        };
+        await fetch(NTFY_BASE, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        setSyncBadge("ok", `🟢 多端实时同步 (${leaderboardData.length}人)`);
+      } catch (e) {
+        setSyncBadge("local", "🟡 已存本机（联网后自动同步）");
+      }
+    }
+
+    async function clearLeaderboard() {
+      if (!confirm("确定要清空所有设备上的排行榜记录吗？")) return;
+      const clearTs = Date.now();
+      setLocalClearTs(clearTs);
+      setLocalLeaderboard([]);
+      leaderboardData = [];
+      lastSubmittedId = null;
+      renderLeaderboard();
+      try {
+        await fetch(NTFY_BASE, {
+          method: "POST",
+          body: JSON.stringify({ type: "clear", ts: clearTs })
+        });
+      } catch (e) {}
+    }
+
+    function initRealtimeSubscription() {
+      if (window.location.protocol.startsWith("http")) {
+        const input = document.getElementById("share-url-input");
+        if (input) input.value = window.location.href;
+      }
+      syncFromCloud(false);
+      try {
+        const es = new EventSource(`${NTFY_BASE}/sse`);
+        es.onmessage = (ev) => {
+          try {
+            const outer = JSON.parse(ev.data);
+            if (outer.event === "message" && outer.message) {
+              const payload = JSON.parse(outer.message);
+              const msgTs = payload.ts || (outer.time ? outer.time * 1000 : Date.now());
+              if (payload.type === "clear") {
+                setLocalClearTs(msgTs);
+                setLocalLeaderboard([]);
+                leaderboardData = [];
+                renderLeaderboard();
+                setSyncBadge("ok", "🟢 多端实时同步 (0人)");
+                return;
+              }
+              const lastClearTs = getLocalClearTs();
+              if (msgTs <= lastClearTs) return;
+              const recordMap = new Map();
+              for (const item of getLocalLeaderboard()) {
+                if (item && item.id && (item.ts || 0) > lastClearTs) recordMap.set(item.id, item);
+              }
+              if (Array.isArray(payload.snapshot)) {
+                for (const rec of payload.snapshot) {
+                  if (rec && rec.id && (rec.ts || msgTs) > lastClearTs) recordMap.set(rec.id, rec);
+                }
+              }
+              const single = payload.record || (payload.id ? payload : null);
+              if (single && single.id && (single.ts || msgTs) > lastClearTs) {
+                recordMap.set(single.id, single);
+              }
+              leaderboardData = sortLeaderboard(Array.from(recordMap.values()));
+              setLocalLeaderboard(leaderboardData);
+              renderLeaderboard();
+              setSyncBadge("ok", `🟢 多端实时同步 (${leaderboardData.length}人)`);
+            }
+          } catch (e) {
+            syncFromCloud(false);
+          }
+        };
+      } catch (e) {}
+      setInterval(() => {
+        syncFromCloud(false);
+      }, 25000);
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById("leaderboard-body");
+      const count = leaderboardData.length;
+      document.getElementById("stat-count").textContent = count;
+
+      if (count === 0) {
+        document.getElementById("stat-max").textContent = "-";
+        document.getElementById("stat-avg").textContent = "-";
+        document.getElementById("stat-full").textContent = "0";
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-rank">暂无考核记录，快来提交第一份满分答卷吧！</td></tr>`;
+        return;
+      }
+
+      const maxScore = Math.max(...leaderboardData.map(r => r.score));
+      const avgScore = Math.round(leaderboardData.reduce((s, r) => s + r.score, 0) / count);
+      const fullCount = leaderboardData.filter(r => r.score === 100).length;
+
+      document.getElementById("stat-max").textContent = `${maxScore}分`;
+      document.getElementById("stat-avg").textContent = `${avgScore}分`;
+      document.getElementById("stat-full").textContent = `${fullCount}人`;
+
+      tbody.innerHTML = leaderboardData.map((r, idx) => {
+        let rankDisplay = idx + 1;
+        if (idx === 0) rankDisplay = "🥇 1";
+        else if (idx === 1) rankDisplay = "🥈 2";
+        else if (idx === 2) rankDisplay = "🥉 3";
+
+        const isMe = r.id === lastSubmittedId;
+        const scoreClass = r.score === 100 ? "score-pill full" : "score-pill";
+        const correctStr = (r.correct !== undefined && r.total !== undefined) ? `${r.correct} / ${r.total}` : "-";
+
+        return `
+          <tr class="${isMe ? "highlight-row" : ""}">
+            <td><span class="rank-medal">${rankDisplay}</span></td>
+            <td>${escapeHtml(r.name)} ${isMe ? "👈" : ""}</td>
+            <td>${escapeHtml(r.dept || "-")}</td>
+            <td><span class="${scoreClass}">${r.score} 分</span></td>
+            <td>${correctStr}</td>
+            <td>${formatDuration(r.duration || 0)}</td>
+            <td>${escapeHtml(r.device || "电脑端")}</td>
+            <td>${escapeHtml(r.time || "-")}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function exportLeaderboardCSV() {
+      if (!leaderboardData.length) {
+        alert("当前排行榜暂无数据可导出");
+        return;
+      }
+      const headers = ["排名", "姓名", "部门/门店", "得分", "答对题数", "用时(秒)", "设备端", "提交时间"];
+      const rows = leaderboardData.map((r, i) => [
+        i + 1,
+        `"${(r.name || "").replace(/"/g, '""')}"`,
+        `"${(r.dept || "-").replace(/"/g, '""')}"`,
+        r.score,
+        r.correct !== undefined ? `${r.correct}/${r.total}` : "-",
+        r.duration || 0,
+        r.device || "电脑端",
+        r.time || "-"
+      ]);
+      const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `配件知识测试考核试卷_排行榜_${new Date().toLocaleDateString("zh-CN")}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[s]));
+    }
+
+    function scrollToLeaderboard() {
+      document.getElementById("leaderboard-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function stopConfetti() {
+      if (confettiAnimId) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+      const canvas = document.getElementById("confetti-canvas");
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function startConfetti() {
+      stopConfetti();
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ["#ff3b30", "#ff9500", "#ffcc00", "#34c759", "#007aff", "#5856d6", "#af52de", "#ff2d55"];
+      const pieces = Array.from({ length: 260 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 12 + 6,
+        h: Math.random() * 7 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vy: Math.random() * 4.5 + 2.5,
+        vx: (Math.random() - 0.5) * 3.5,
+        angle: Math.random() * 360,
+        spin: (Math.random() - 0.5) * 9
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.y += p.vy;
+          p.x += p.vx;
+          p.angle += p.spin;
+          if (p.y > canvas.height + 20) {
+            p.y = -20;
+            p.x = Math.random() * canvas.width;
+          }
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.angle * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        confettiAnimId = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    window.addEventListener("resize", () => {
+      const canvas = document.getElementById("confetti-canvas");
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    });
+
+    renderQuiz();
+    initRealtimeSubscription();
+  </script>
+</body>
+</html>
