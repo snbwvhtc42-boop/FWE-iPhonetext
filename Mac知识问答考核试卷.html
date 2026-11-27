@@ -673,7 +673,7 @@
     </div>
 
     <div class="notice-bar">
-      <span>规则说明：百分制计分（共 21 题单项选择），交卷后锁定不可修改并实时同步至多设备排行榜</span>
+      <span>规则说明：共 21 题单项选择（第 1-16 题每题 5 分，第 17-21 题每题 4 分，满分 100 分），交卷后锁定不可修改并实时同步至多设备排行榜</span>
       <span class="progress-text" id="progress-display">已答：0 / 21 题</span>
     </div>
 
@@ -1075,10 +1075,14 @@
       } catch (e) {}
     }
 
+    function getQuestionScore(qIdx) {
+      return qIdx < 16 ? 5 : 4;
+    }
+
     function renderQuiz() {
       const listEl = document.getElementById("quiz-list");
-      const scoreLabel = Number.isInteger(perScore) ? perScore : perScore.toFixed(1);
       listEl.innerHTML = questions.map((item, qIdx) => {
+        const scoreLabel = getQuestionScore(qIdx);
         const isMulti = Array.isArray(item.answer) && item.multi !== false;
         const inputType = isMulti ? "checkbox" : "radio";
         const tagHtml = item.tag ? `<span class="tag">${item.tag}</span>` : "";
@@ -1167,6 +1171,7 @@
       deptInput.disabled = true;
 
       let correctCount = 0;
+      let totalEarnedScore = 0;
 
       questions.forEach((item, qIdx) => {
         const userSet = answeredState[qIdx];
@@ -1193,10 +1198,11 @@
         const correct = isSameSet(userSet, rightArr);
         const userText = Array.from(userSet).sort((a, b) => a - b).map(i => ["A", "B", "C", "D"][i]).join("、");
         const rightText = item.answerText || rightArr.map(i => ["A", "B", "C", "D"][i]).join("、");
-        const scoreLabel = Number.isInteger(perScore) ? perScore : perScore.toFixed(1);
+        const scoreLabel = getQuestionScore(qIdx);
 
         if (correct) {
           correctCount += 1;
+          totalEarnedScore += scoreLabel;
           card.classList.add("correct");
           statusEl.textContent = `✓ 回答正确（+${scoreLabel}分） 正确答案：${rightText}`;
         } else {
@@ -1205,7 +1211,7 @@
         }
       });
 
-      const finalScore = Math.round((correctCount / questions.length) * 100);
+      const finalScore = totalEarnedScore;
       document.getElementById("score-display").textContent = `最终得分：${finalScore} / 100`;
 
       const btn = document.getElementById("submit-btn");
